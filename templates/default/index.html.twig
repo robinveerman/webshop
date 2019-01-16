@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welkom{% endblock %}
+
+{% block body %}
+    <h1>Welkom</h1>
+    <hr>
+    {% for producten in productens %}
+        <div class="card" style="width: 18rem;">
+            <img src="/uploads/{{ producten.imagepath[0].imagepath }}" class="card-img-top" alt="{{ producten.naam }}"
+                 width="75">
+            <hr>
+            <div class="card-body">
+                <h3 class="card-title">{{ producten.naam }}</h3>
+                <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
+                <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success">In Winkelwagen</a>
+                <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

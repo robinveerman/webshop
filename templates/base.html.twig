@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('style/responsive.css') }}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    {# Bootstrap #}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    {# Font Awsome #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    {# Custom styles #}
+    <link rel="stylesheet" href="{{ asset('style/datatables.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/style.css') }}">
+
+    {# Select forms #}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <script>
+        function showNav() {
+            document.getElementById("click").onclick = "hideNav()";
+            document.getElementById("side-nav").style = "display: block";
+
+
+        }
+
+        function hideNav() {
+            document.getElementById("click").onclick = "showNav()";
+            document.getElementById("side-nav").style = "display: none";
+
+        }
+    </script>
+</head>
+<body>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal bars-menu" id="click" onclick="showNav()"><i class="fas fa-bars"></i>
+    </h5>
+    <h5 class="my-0 mr-md-auto font-weight-normal website-title"><a href="{{ path('default') }}">Webshop</a></h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+
+        <a class="p-2 text-dark" href="{{ path('product_index') }}">Producten</a>
+
+        {% if app.user %}
+            {% if not is_granted("ROLE_SUPER_ADMIN") %}
+                <a class="p-2 text-dark" href="{{ path('n_a_w_index') }}">Mijn Adresgegevens</a>
+                <a class="p-2 text-dark" href="{{ path('factuur_index') }}">Mijn bestellingen</a>
+            {% endif %}
+        {% endif %}
+        <a class="p-2 text-dark" href="{{ path('cart') }}"><i
+                    class="fas fa-shopping-cart"></i> {{ app.session.get('cart')|length }}</a>
+    </nav>
+    <div class="btn-menu">
+        {% if is_granted("ROLE_SUPER_ADMIN") %}
+            <a class="btn btn-info"
+               href="{{ path('dashboard') }}">Admin</a>
+        {% endif %}
+        {% if app.user %}
+            <a class="btn btn-outline-primary"
+               href="{{ path('fos_user_profile_edit') }}">{{ app.user.username }}</a>&nbsp;
+            <a class="btn btn-outline-danger" href="{{ path('fos_user_security_logout') }}">Log uit</a>
+        {% else %}
+            <a class="btn btn-outline-primary" href="{{ path('fos_user_registration_register') }}">Registreren</a>&nbsp;
+            <a class="btn btn-outline-success" href="{{ path('fos_user_security_login') }}">Login</a>
+        {% endif %}
+
+    </div>
+</div>
+{#<div id="side-nav">#}
+{#{% if app.user %}#}
+{#{% if not is_granted("ROLE_SUPER_ADMIN") %}#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('product_index') }}">Producten</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('n_a_w_index') }}">Mijn Adresgegevens</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Mijn bestellingen</a>#}
+{#<br>#}
+{#<br>#}
+{#{% endif %}#}
+{#{% if is_granted("ROLE_SUPER_ADMIN") %}#}
+{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Bestellingen</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('user_index') }}">Gebruikers</a>#}
+{#<br>#}
+{#<br>#}
+{#{% endif %}#}
+{#{% endif %}#}
+{#<a class="p-2 text-dark" href="{{ path('cart') }}"><i class="fas fa-shopping-cart"></i> Winkelwagen</a>#}
+{#</div>#}
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
+</body>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+<script src="{{ asset('datatables.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+</html>

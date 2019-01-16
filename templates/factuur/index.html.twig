@@ -1,0 +1,64 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
+{% block title %}Factuur index{% endblock %}
+
+{% block body %}
+    <h1>Factuur</h1>
+    <hr>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <a href="{{ path('factuur_new') }}" class="btn btn-success">Nieuw</a>
+    {% endif %}
+    <hr>
+    <table class="table" id="lijst">
+        <thead>
+        <tr>
+            <th>Klant</th>
+            <th>Datum</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for factuur in factuurs %}
+            <tr>
+                <td>{{ factuur.klantId }}
+                    {% for row in naw if row.user.id == factuur.klantId.id %}
+                        ({{ row.voornaam }} {{ row.achternaam }})
+                    {% endfor %}</td>
+                <td>{{ factuur.datum ? factuur.datum|date('Y-m-d') : '' }}</td>
+
+                <td>
+                    <a class="btn btn-primary" href="{{ path('factuur_show', {'id': factuur.id}) }}">Bekijk</a>
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <a class="btn btn-warning" href="{{ path('factuur_edit', {'id': factuur.id}) }}">Bewerk</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">geen gegevens gevonden</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <hr>
+        <a href="{{ path('factuur_new') }}" class="btn btn-success">Nieuw</a>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            var table = $('#lijst').DataTable({
+                stateSave: true
+            });
+            table.buttons().container()
+                .appendTo($('.col-sm-6:eq(0)', table.table().container()));
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+{% endblock %}

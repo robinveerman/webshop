@@ -1,0 +1,33 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit Factuur{% endblock %}
+{% block stylesheets %}
+    <style>
+        #factuur_regels{
+            margin-left: 25px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+<h1>Factuur bewerken</h1>
+<hr>
+{{ include('factuur/_form.html.twig', {'button_label': 'Update'}) }}
+<br>
+<a class="btn btn-primary" href="{{ path('factuur_index') }}">Terug</a>
+<br>
+<br>
+{{ include('factuur/_delete_form.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $('.my-selector').collection({
+            up: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></a>',
+            down: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></a>',
+            add: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span></a>',
+            remove: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a>'
+        });
+
+    </script>
+{% endblock %}

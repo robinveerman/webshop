@@ -1,0 +1,47 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Categorie index{% endblock %}
+
+{% block body %}
+    <h1>Categorie</h1>
+    <hr>
+    <a href="{{ path('categorie_new') }}" class="btn btn-success">Nieuw</a>
+    <hr>
+    <table class="table" id="lijst">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for categorie in categories %}
+            <tr>
+                <td>{{ categorie.naam }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('categorie_show', {'id': categorie.id}) }}">Bekijk</a>
+                    <a class="btn btn-warning" href="{{ path('categorie_edit', {'id': categorie.id}) }}">Bewerk</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">geen gegevens gevonden</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <a href="{{ path('categorie_new') }}" class="btn btn-success">Nieuw</a>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            var table = $('#lijst').DataTable({
+                stateSave: true
+            });
+            table.buttons().container()
+                .appendTo($('.col-sm-6:eq(0)', table.table().container()));
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+{% endblock %}

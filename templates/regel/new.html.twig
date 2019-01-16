@@ -1,0 +1,11 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Regel{% endblock %}
+
+{% block body %}
+<h1>Regel toevoegen</h1>
+<hr>
+{{ include('regel/_form.html.twig') }}
+<br>
+<a href="{{ path('regel_index') }}" class="btn btn-priamry">Terug</a>
+{% endblock %}

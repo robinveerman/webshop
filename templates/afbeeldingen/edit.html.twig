@@ -1,0 +1,8 @@
+{% extends 'base2.html.twig' %}
+{% block body %}
+    <img class="thumpnail" src="uploads/{{ afbeeldingen.imagepath }}">
+    <br>
+    {{ include('afbeeldingen/_form.html.twig', {'button_label': 'Update'}) }}
+
+    {{ include('afbeeldingen/_delete_form.html.twig') }}
+{% endblock %}

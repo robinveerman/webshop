@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit Reacties{% endblock %}
+
+{% block body %}
+<h1>Reacties bewerken</h1>
+<hr>
+{{ include('reacties/_form.html.twig', {'button_label': 'Update'}) }}
+
+<a class="btn btn-primary" href="{{ path('reacties_index') }}">Terug</a>
+
+{{ include('reacties/_delete_form.html.twig') }}
+{% endblock %}

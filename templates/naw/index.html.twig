@@ -1,0 +1,94 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
+{% block title %}NAW index{% endblock %}
+
+{% block body %}
+    <h1>Mijn gegevens</h1>
+    <hr>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Gebruiker</th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+                <th>Adres</th>
+                <th>Postcode</th>
+                <th>Woonplaats</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for n_a_w in n_a_ws %}
+                <tr>
+                    <td>{{ n_a_w.user }}</td>
+                    <td>{{ n_a_w.Voornaam }}</td>
+                    <td>{{ n_a_w.Achternaam }}</td>
+                    <td>{{ n_a_w.Adres }}</td>
+                    <td>{{ n_a_w.Postcode }}</td>
+                    <td>{{ n_a_w.Woonplaats }}</td>
+                    <td>
+                        <a class="btn btn-warning" href="{{ path('n_a_w_edit', {'id': n_a_w.id}) }}">Bewerk</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">geen gegevens gevonden</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if n_a_ws == null %}
+            <a href="{{ path('n_a_w_new') }}" class="btn btn-success">Nieuw</a>
+        {% endif %}
+    {% else %}
+
+        <table class="table">
+            <thead>
+            {% for n_a_w in n_a_ws %}
+            <tr>
+                <th>Voornaam</th>
+                <td>{{ n_a_w.Voornaam }}</td>
+            </tr>
+            <tr>
+                <th>Achternaam</th>
+                <td>{{ n_a_w.Achternaam }}</td>
+            </tr>
+            <tr>
+                <th>Adres</th>
+                <td>{{ n_a_w.Adres }}</td>
+            </tr>
+            <tr>
+                <th>Postcode</th>
+                <td>{{ n_a_w.Postcode }}</td>
+            </tr>
+            <tr>
+                <th>Woonplaats</th>
+                <td>{{ n_a_w.Woonplaats }}</td>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>
+                    <a class="btn btn-warning" href="{{ path('n_a_w_edit', {'id': n_a_w.id}) }}">Bewerk</a>
+                </td>
+            </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">geen gegevens gevonden</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if n_a_ws == null %}
+            <a href="{{ path('n_a_w_new') }}" class="btn btn-success">Nieuw</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

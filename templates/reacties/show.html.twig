@@ -1,0 +1,31 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Reacties{% endblock %}
+
+{% block body %}
+    <h1>Reacties</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reacty.id }}</td>
+            </tr>
+            <tr>
+                <th>Text</th>
+                <td>{{ reacty.text }}</td>
+            </tr>
+            <tr>
+                <th>IpAdres</th>
+                <td>{{ reacty.ipAdres }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('reacties_index') }}" class="btn btn-primary">Terug</a>
+<br>
+    <a class="btn btn-warning" href="{{ path('reacties_edit', {'id': reacty.id}) }}">Bewerken</a>
+<br>
+<br>
+    {{ include('reacties/_delete_form.html.twig') }}
+{% endblock %}

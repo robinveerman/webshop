@@ -1,0 +1,35 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Regel index{% endblock %}
+
+{% block body %}
+    <h1>Regel</h1>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Aantal</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for regel in regels %}
+            <tr>
+                <td>{{ regel.id }}</td>
+                <td>{{ regel.aantal }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('regel_show', {'id': regel.id}) }}">Bekijk</a>
+                    <a class="btn btn-warnign" href="{{ path('regel_edit', {'id': regel.id}) }}">Bewerk</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">geen gegevens gevonden</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('regel_new') }}" class="btn btn-success">Nieuw</a>
+{% endblock %}

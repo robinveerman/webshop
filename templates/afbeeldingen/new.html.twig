@@ -1,0 +1,11 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Afbeeldingen{% endblock %}
+
+{% block body %}
+<h1>Afbeeldingen toevoegen</h1>
+<hr>
+{{ include('afbeeldingen/_form.html.twig') }}
+<br>
+<a href="{{ path('afbeeldingen_index') }}" class="btn btn-priamry">Terug</a>
+{% endblock %}

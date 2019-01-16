@@ -1,0 +1,11 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Factuur{% endblock %}
+
+{% block body %}
+<h1>Factuur toevoegen</h1>
+<hr>
+{{ include('factuur/_form.html.twig') }}
+<br>
+<a href="{{ path('factuur_index') }}" class="btn btn-priamry">Terug</a>
+{% endblock %}

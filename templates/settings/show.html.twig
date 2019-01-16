@@ -1,0 +1,27 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block body %}
+    <h1>Settings</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ setting.id }}</td>
+            </tr>
+            <tr>
+                <th>AddCartAjax</th>
+                <td>{{ setting.AddCartAjax ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('settings_index') }}" class="btn btn-primary">Terug</a>
+<br>
+    <a class="btn btn-warning" href="{{ path('settings_edit', {'id': setting.id}) }}">Bewerken</a>
+<br>
+<br>
+    {{ include('settings/_delete_form.html.twig') }}
+{% endblock %}

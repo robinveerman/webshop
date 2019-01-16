@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('reacties_delete', {'id': reacty.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reacty.id) }}">
+    <button class="btn btn-danger">Verwijderen</button>
+</form>

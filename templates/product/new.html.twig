@@ -1,0 +1,19 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Product{% endblock %}
+
+{% block body %}
+<h1>Product toevoegen</h1>
+<hr>
+{{ include('product/_form.html.twig') }}
+<br>
+<a href="{{ path('product_index') }}" class="btn btn-priamry">Terug</a>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-multiple').select2();
+        });
+
+    </script>
+{% endblock %}

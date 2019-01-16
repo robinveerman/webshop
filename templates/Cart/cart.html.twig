@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Winkelwagen</h1>
+    <hr>
+    <ul class="thumbnails">
+
+        {% if empty %}
+            <h5>Your shopping cart is empty.</h5>
+        {% endif %}
+
+        {% set cart = app.session.get('cart') %}
+        {% set total = 0 %}
+        {% set count = 0 %}
+
+        {% if product %}
+            <div class="row">
+                <div class="col-md-10">
+                    <table class="table table-responsive">
+                        <thead>
+                        <tr>
+                            <th>Aantal</th>
+                            <th>Afbeelding</th>
+                            <th>Omschrijving</th>
+                            <th>Prijs</th>
+                            <th>Totaal</th>
+                            <th>Verwijderen</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, item in cart %}
+                            <tr>
+                                <td>{{ item }}</td>
+
+                                {% for row in product %}
+                                    {% if row.id == key %}
+                                        <td>
+                                            <img src="/uploads/{{ row.imagepath[0].imagepath }}" class="img-rounded"
+                                                 alt="{{ row.naam }}" width="75">
+                                        </td>
+                                        <td>{{ row.naam }}</td>
+                                        <td>€{{ row.prijs | number_format(2) }}</td>
+                                        <td>€{{ (row.prijs * item) | number_format(2) }}</td>
+                                        {% set total = total + (row.prijs * item) %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                <td>
+                                    <a href="{{ path('cart_remove', {'id': key}) }}">
+                                        <button class="btn btn-danger">Verwijder</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </ul>
+    <hr>
+    <h4 class="right">Totaal in winkelwagen = €{{ total | number_format(2) }}</h4>
+    <hr>
+    <a href="{{ path('default') }}">
+        <button type="button" class="btn btn-primary">Verder winkelen</button>
+    </a>
+
+    {# Als gebuiker is ingelogd #}
+    {% if app.user %}
+
+        {# Check of cart vol is #}
+        {% if cart == null %}
+            <a href="{{ path('checkout') }}">
+                <button type="button" class="btn btn-success col-lg-2 pull-right" disabled>Winkelwagen is leeg</button>
+            </a>
+        {% else %}
+            <a href="{{ path('checkout') }}">
+                <button type="button" class="btn btn-success col-lg-2 pull-right">Afrekenen</button>
+            </a>
+            {% if settings[0].ClearCart == 1 %}
+            <a href="{{ path('cart_clear') }}">
+                <button type="button" class="btn btn-danger col-lg-2 pull-right">Leeg maken</button>
+            </a>
+                {% endif %}
+            <br>
+            <br>
+            <br>
+        {% endif %}
+
+        {# Check of NAW-gegevens aanwezig zijn #}
+        {% if naw == null %}
+            <div class="alert alert-danger">
+                <b>Let op!</b>
+                <p>Uw adresgegevens zijn nog niet bij ons bekend. Voeg ze toe voordat u afrekend.</p>
+            </div>
+            <a href="{{ path('n_a_w_new') }}" class="btn btn-success">Voeg toe</a>
+        {% endif %}
+    {% else %}
+        <br>
+        <br>
+        <h2>
+            <a href="{{ path('fos_user_security_login') }}">Log in</a>
+            of
+            <a href="{{ path('fos_user_registration_register') }}">registreer</a>
+            om verder te gaan.
+        </h2>
+    {% endif %}
+    <br>
+    <br>
+{% endblock %}

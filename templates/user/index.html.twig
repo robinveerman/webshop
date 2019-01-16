@@ -1,0 +1,114 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <h1>Gebruikers</h1>
+    <hr>
+    <table class="table" id="lijst">
+        <thead>
+        <tr>
+            <th>Adres</th>
+            <th>Naam</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actief</th>
+            <th>Laatste login</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>
+                    {% for row in naw if row.user.id == user.id %}
+                        {{ row.adres|capitalize(1) }}<br>
+                        {{ row.postcode }}<br>
+                        {{ row.woonplaats|capitalize(1) }}
+                    {% else %}
+                        <i>Geen gegevens</i>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for row in naw if row.user.id == user.id %}
+                        {{ row.voornaam }}
+                        {{ row.achternaam }}
+                    {% else %}
+                        <i>Geen gegevens</i>
+                    {% endfor %}
+                </td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.enabled ? '<i style="color:green" class="fas fa-check"></i>' : '<i style="color:red" class="fas fa-times"></i>' }}</td>
+                <td>{{ user.lastLogin ? user.lastLogin|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a class="btn btn-warning" href="{{ path('user_edit', {'id': user.id}) }}"><i
+                                class="fas fa-user-edit"></i></a>
+                    {% for row in naw if row.user.id == user.id %}
+                        {% if row == null %}
+                        {% else %}
+                            <a class="btn btn-info" href="{{ path('n_a_w_edit', {id: row.id}) }}"><i
+                                        class="fas fa-edit"></i>Gegevens</a>
+                        {% endif %}
+                    {% else %}
+                        <a class="btn btn-info" href="{{ path('n_a_w_new') }}"><i class="fas fa-plus"></i> Gegevens</a>
+                    {% endfor %}
+                    {% if user.username == "admin" %}
+                    {% else %}
+                        {% if user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                            <button type="button" id="delete-admin-{{ user.id }}"
+                                    onclick="role({{ user.id }}, this.id)"
+                                    class="btn btn-danger"><i class="fas fa-minus"></i> Admin
+                            </button>
+                        {% else %}
+                            <button type="button" id="make-admin-{{ user.id }}"
+                                    onclick="role({{ user.id }}, this.id)"
+                                    class="btn btn-success"><i class="fas fa-plus"></i> Admin
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">geen gegevens gevonden</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function role(user, btn) {
+            if (btn == 'delete-admin-' + user) {
+                console.log('btn:' + btn + '<br>' + 'user: ' + user);
+                document.getElementById('delete-admin-' + user).className = 'btn btn-success';
+                document.getElementById('delete-admin-' + user).innerHTML = '<i class="fas fa-plus"></i> Admin';
+                document.getElementById('delete-admin-' + user).id = 'make-admin-' + user;
+
+            } else if (btn == 'make-admin-' + user) {
+                console.log('btn:' + btn + '<br>' + 'user: ' + user);
+                document.getElementById('make-admin-' + user).className = 'btn btn-danger';
+                document.getElementById('make-admin-' + user).innerHTML = '<i class="fas fa-minus"></i> Admin';
+                document.getElementById('make-admin-' + user).id = 'delete-admin-' + user;
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.open("GET", "/user/role/" + user, true);
+            xmlhttp.send();
+        }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            var table = $('#lijst').DataTable({
+                stateSave: true
+            });
+            table.buttons().container()
+                .appendTo($('.col-sm-6:eq(0)', table.table().container()));
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+{% endblock %}
+

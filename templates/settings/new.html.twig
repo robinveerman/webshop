@@ -1,0 +1,11 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Settings{% endblock %}
+
+{% block body %}
+    <h1>Settings toevoegen</h1>
+    <hr>
+    {{ include('settings/_form.html.twig') }}
+    <br>
+    <a href="{{ path('settings_index') }}" class="btn btn-primary">Terug</a>
+{% endblock %}

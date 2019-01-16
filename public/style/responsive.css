@@ -1,0 +1,49 @@
+/*!* IPad*!*/
+/*@media only screen and (max-width: 830px) {*/
+    /*nav a {*/
+        /*display: none !important;*/
+    /*}*/
+
+    /*nav {*/
+        /*height: 30px;*/
+        /*position: fixed;*/
+    /*}*/
+
+    /*.website-title {*/
+        /*left: 100px;*/
+        /*position: absolute;*/
+        /*text-align: center !important;*/
+    /*}*/
+
+    /*.btn-menu {*/
+        /*display: none !important;*/
+    /*}*/
+
+    /*.bars-menu {*/
+        /*display: block !important;*/
+    /*}*/
+/*}*/
+/*!* Smartphone *!*/
+/*@media only screen and (max-width: 767px) {*/
+ /*nav{*/
+     /*height: 10px !important;*/
+     /*position: relative;*/
+ /*}*/
+    /*.website-title{*/
+        /*text-align: center !important;*/
+    /*}*/
+/*}*/
+/*#side-nav{*/
+    /*background-color: #e9e9e9;*/
+    /*height: 100vh;*/
+    /*width: 250px;*/
+    /*position: fixed !important;*/
+    /*z-index: 9999;*/
+    /*top: 60px;*/
+    /*display: none;*/
+/*}*/
+/*#side-nav > a{*/
+    /*padding: 20px !important;*/
+    /*margin-top: 10px;*/
+    /*font-size: 15pt;*/
+/*}*/

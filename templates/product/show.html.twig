@@ -1,0 +1,185 @@
+{#{% if is_granted("ROLE_SUPER_ADMIN") %}#}
+    {#{% set base  = 'base2.html.twig' %}#}
+{#{% else %}#}
+    {#{% set base  = 'base.html.twig' %}#}
+{#{% endif %}#}
+{#{% extends base %}#}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Product{% endblock %}
+{% block stylesheets %}
+    <style>
+        .mySlides {
+            display: none;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    <div class="w3-content w3-display-container" style="width: 550px; float: left; border: solid 2px; height: 400px; object-fit: cover;">
+        {% for row in product.imagepath %}
+            <img class="mySlides" src="/uploads/{{ row.imagepath }}" style=" margin-left: 90px; object-fit: cover">
+        {% endfor %}
+        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+    </div>
+
+    <br>
+
+    <div class="product-info">
+        <h1>{{ product.naam }}</h1>
+        {% if product.maat != null %}
+            <h4><b>Maat: </b>{{ product.maat }}</h4>
+        {% endif %}
+        <h2>&euro;{{ product.prijs|number_format(2) }}</h2>
+        {% if settings[0].AddCartAjax == 1 %}
+            <br>
+            <br>
+            <button class="btn btn-success" onclick="add({{ product.id }}, '{{ product.naam }}')"><i
+                        class="fas fa-cart-plus"></i></button>
+        {% else %}
+            <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                        class="fas fa-cart-plus"></i> In winkelwagen</a>
+        {% endif %}
+    </div>
+    <div class="product-beschrijving">
+        <h2>Beschrijving</h2>
+        <hr>
+        <p>{{ product.omschrijving }}</p>
+        <hr>
+    </div>
+    <div class="related-products">
+        <h2>Gerelateerde producten</h2>
+        <hr>
+        {% if product.relatedProducts != null %}
+            {% for producten in product.relatedProducts %}
+                <div class="product-card" style="width: 18rem;">
+                    <img src="/uploads/{{ producten.imagepath[0].imagepath }}" class="card-img-top" alt="{{ producten.naam }}"
+                         width="75">
+                    <hr>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ producten.naam }}</h3>
+                        <h4 class="card-text" style="color: dodgerblue">
+                            &euro;{{ producten.prijs|number_format(2) }}</h4>
+                        {% if settings[0].AddCartAjax == 1 %}
+                            <button class="btn btn-success" onclick="add({{ product.id }}, '{{ product.naam }}')"><i
+                                        class="fas fa-cart-plus"></i></button>
+                        {% else %}
+                            <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                                        class="fas fa-cart-plus"></i></a>
+                        {% endif %}
+                        <br>
+                        <br>
+                        <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            {% for producten in producten %}
+                <div class="product-card" style="width: 18rem;">
+                    <img src="/uploads/{{ producten.imagepath[0].imagepath }}" class="card-img-top" alt="{{ producten.naam }}"
+                         width="75">
+                    <hr>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ producten.naam }}</h3>
+                        <h4 class="card-text" style="color: dodgerblue">
+                            &euro;{{ producten.prijs|number_format(2) }}</h4>
+                        <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success"><i
+                                    class="fas fa-cart-plus"></i></a>
+                        <br>
+                        <br>
+                        <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="comments">
+        <h2>Reacties ({{ reacties|length }})</h2>
+        <hr>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">{{ button_label|default('Plaatsen') }}</button>
+        {{ form_end(form) }}
+        <br>
+        {% for row in reacties %}
+            <div class="jumbotron comment">
+                <b>{{ row.user ? row.user : 'Anoniem' }}</b><br>
+                <i>{{ row.timestamp|date }}</i>
+                <hr>
+                <p>{{ row.text }}</p>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    <hr>
+                    <a href="{{ path('reacties_edit', {'id': row.id}) }}" class="btn btn-warning">Bewerken</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="message" aria-live="polite" aria-atomic="true"
+             style="position: fixed; min-height: 200px;">
+            <div class="toast" style="position: absolute; top: 0; right: 0;">
+                <div class="toast-header">
+                    <i class="fas fa-check-circle rounded mr-2" style="color:white"></i>
+                    <strong class="mr-auto">Product toegevoegd</strong>
+                    <small>Nu</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Product toegevoegd aan winkelwagen
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <div class="product-btn">
+            <hr>
+            <a href="{{ path('product_index') }}" class="btn btn-primary">Terug</a>
+            <br>
+            <br>
+            <a class="btn btn-warning" href="{{ path('product_edit', {'id': product.id}) }}">Bewerken</a>
+            <br>
+            <br>
+            {{ include('product/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $('.toast').toast(option);
+
+        function add(id, naam) {
+            $('.toast').toast('show');
+            var xhttp;
+
+            xhttp = new XMLHttpRequest();
+
+            xhttp.open("GET", "../cart/add/" + id, true);
+            xhttp.send();
+        }
+    </script>
+    <script>
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) {
+                slideIndex = 1
+            }
+            if (n < 1) {
+                slideIndex = x.length
+            }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex - 1].style.display = "block";
+        }
+    </script>
+{% endblock %}

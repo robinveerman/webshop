@@ -1,0 +1,148 @@
+{% extends "base2.html.twig" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <!-- JQuery -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.10/js/mdb.min.js"></script>
+
+        <h1>Dashboard</h1>
+        <hr>
+
+        {# Totale omzet #}
+        <div class="jumbotron small">
+            <h2>Totale omzet</h2>
+            <hr>
+            {% set totaal = 0 %}
+            {% for row in regel %}
+                {% set totaal = totaal + row.productId.prijs * row.aantal %}
+            {% endfor %}
+            <h3>
+                <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
+            </h3>
+        </div>
+
+        {# Omzet deze maand #}
+        <div class="jumbotron small">
+            <h2>Omzet {{ 'now'|date('M') }} </h2>
+            <hr>
+            {% set totaal = 0 %}
+            {% for row in regel if row.factuurId.datum|date('m') == 'now'|date('m') %}
+                {% set totaal = totaal + row.productId.prijs * row.aantal %}
+            {% endfor %}
+            <h3>
+                <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
+            </h3>
+        </div>
+
+        {# Omzet vorige maand #}
+        <div class="jumbotron small">
+            <h2>Omzet {{ 'now'|date_modify('-1 month')|date('M') }} </h2>
+            <hr>
+            {% set totaal = 0 %}
+            {% for row in regel if row.factuurId.datum|date('M') == 'now'|date('M')|date_modify('-1 month') %}
+                {% set totaal = totaal + row.productId.prijs * row.aantal %}
+            {% endfor %}
+            <h3>
+                <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
+            </h3>
+        </div>
+        {# Aantal verkochten producten #}
+        <h2>Product statistieken</h2>
+        <hr>
+        <div class="jumbotron">
+            <table class="table table-bordered" style="background-color: white">
+                <tbody>
+                <tr>
+                    {% for product in producten %}
+                        <th>
+                            {{ product.naam }} {{ product.maat }}
+                        </th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for regel in regels %}
+
+                        <td> {% if (regel[1] is empty) %}
+                                0 stuk(s)
+                            {% else %}
+                                {{ regel[1] }} stuk(s)
+                            {% endif %}</td>
+
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {# Grafiek verkochten producren#}
+        <h2>Verkochte producten</h2>
+        <hr>
+        <div class="jumbotron">
+            <div class="col-md-5" style="float: left; ">
+                <canvas id="grafiek" style="width: 100% !important;"></canvas>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        {# Script voor stats #}
+        <script>
+            var ctx = document.getElementById("grafiek").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [ {% for label in producten %}
+                        "{{ label.naam }} {{ label.maat }}",
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'producten verkocht',
+                        data: [{% for data in regels %}{{ data[1] }},{% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit Settings{% endblock %}
+
+{% block body %}
+    <h1>Settings bewerken</h1>
+    <hr>
+    {{ include('settings/_form.html.twig', {'button_label': 'Update'}) }}
+    <hr>
+    <br>
+    <a class="btn btn-primary" href="{{ path('settings_index') }}">Terug</a>
+
+{% endblock %}

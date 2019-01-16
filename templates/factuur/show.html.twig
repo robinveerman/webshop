@@ -1,0 +1,56 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+{% block body %}
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <h1>Factuur {{ factuur.id }}</h1>
+    {% endif %}
+    <hr>
+    <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
+    <hr>
+    <table class="table table-striped pull-right">
+        <thead>
+        <tr>
+            <th>Aantal</th>
+            <th>product</th>
+            <th>prijs per stuk</th>
+            <th>totaal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set gentot = 0 %}
+        {% for regel in regels %}
+            <tr>
+                <td>{{ regel.aantal }}</td>
+                {% set totaal = regel.aantal %}
+                <td>{{ regel.productId.naam|default('Product bestaat niet meer') }}</td>
+                <td>&euro;
+                    {% for product in products %}
+                        {% set p = regel.productId %}
+                        {% if p.id|default("") == product.id|default("") %}
+                            {{ product.prijs|number_format(2) }}
+                            {% set totaal = (totaal * product.prijs) %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>&euro; {{ totaal|number_format(2) }}</td>
+                {% set gentot = (gentot + totaal) %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h3 class="btn-block">Totaal:<br>€ {{ gentot|number_format(2) }}</h3>
+    <hr>
+    <a style="float: left;" href="{{ path('factuur_index') }}">
+        <button type="button" class="btn btn-primary">Terug</button>
+    </a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a style="float: left;" href="{{ path('factuur_edit', { 'id': factuur.id }) }}">
+            <button type="button" class="btn btn-warning">Bewerk</button>
+        </a>
+    {% endif %}
+{% endblock %}

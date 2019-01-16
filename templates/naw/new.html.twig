@@ -1,0 +1,16 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
+{% block title %}New NAW{% endblock %}
+
+{% block body %}
+<h1>Persoonsgegevens toevoegen</h1>
+<hr>
+{{ include('naw/_form.html.twig') }}
+<br>
+<a href="{{ path('n_a_w_index') }}" class="btn btn-primary">Terug</a>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Settings index{% endblock %}
+
+{% block body %}
+    <h1>Settings</h1>
+    <hr>
+    {% if settings == null %}
+        <a href="{{ path('settings_new') }}" class="btn btn-success">Toevoegen</a>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Instelling</th>
+                <th>Aan of uit</th>
+                <th></th>
+            </tr>
+            </thead>
+            {% for row in settings %}
+                <tr>
+                    <th width="100">Add to cart Ajax</th>
+                    <td width="100">{{ row.addCartAjax == 0 ?
+                        '<h3><i style="color:red" class="fas fa-times"></i></h3>'
+                        : '<h3><i style="color:green"class="fas fa-check"></i></h3>' }}</td>
+                    <td width="100"><a class="btn btn-warning" href="{{ path('settings_edit', {'id': row.id}) }}">Bewerken</a></td>
+                </tr>
+                <tr>
+                    <th width="100">Winkelwagen leegmaken knop</th>
+                    <td width="100">{{ row.clearCart == 0 ?
+                        '<h3><i style="color:red" class="fas fa-times"></i></h3>'
+                        : '<h3><i style="color:green"class="fas fa-check"></i></h3>' }}</td>
+                    <td width="100"><a class="btn btn-warning" href="{{ path('settings_edit', {'id': row.id}) }}">Bewerken</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

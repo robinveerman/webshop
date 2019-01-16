@@ -1,0 +1,52 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Reacties index{% endblock %}
+
+{% block body %}
+    <h1>Reacties</h1>
+    <hr>
+    <input onkeyup="search()" id="myInput" class="form-control" placeholder="Zoeken..." style="width: 25%">
+    <br>
+    {% for reacty in reacties %}
+        <div class="jumbotron comment myUL" style="width: 49%; float:left; margin: 0.5%">
+            <b>{{ reacty.user ? reacty.user : "Anoniem" }}</b>
+            ->
+            <b>{{ reacty.product.naam }} ({{ reacty.product.code }})</b><br>
+            <i>{{ reacty.timestamp|date }}</i><br>
+            <u>{{ reacty.ipAdres }}</u>
+            <hr>
+            <p>{{ reacty.text }}</p>
+            <hr>
+            <a href="{{ path('reacties_edit', {'id': reacty.id}) }}" class="btn btn-warning">Bewerken</a>
+        </div>
+    {% else %}
+
+    {% endfor %}
+
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+
+        function search() {
+            var input, filter, ul, li, a, i;
+
+            //input
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+
+            //lijst om te filteren
+            li = document.getElementsByClassName("myUL");
+            for (x = 0; x < li.length; x++) {
+                for (i = 0; i < li.length; i++) {
+                    if (li[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

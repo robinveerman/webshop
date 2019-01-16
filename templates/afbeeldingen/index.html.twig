@@ -1,0 +1,17 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Afbeeldingen index{% endblock %}
+
+{% block body %}
+    <h1>Afbeeldingen</h1>
+    <hr>
+    <a href="{{ path('afbeeldingen_new') }}" class="btn btn-success">Nieuw</a>
+    <hr>
+    <div class="image-container">
+        {% for row in afbeeldingens %}
+            <a href="{{ path('afbeeldingen_edit', {'id': row.id}) }}"><img alt="{{ row.alttekst }}"
+                                                                        src="/uploads/{{ row.imagepath }}"
+                                                                        class="thumpnail"></a>
+        {% endfor %}
+    </div>
+{% endblock %}

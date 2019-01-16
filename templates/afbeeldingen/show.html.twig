@@ -1,0 +1,39 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Afbeeldingen{% endblock %}
+
+{% block body %}
+    <h1>Afbeeldingen</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ afbeeldingen.id }}</td>
+            </tr>
+            <tr>
+                <th>Imagepath</th>
+                <td>{{ afbeeldingen.imagepath }}</td>
+            </tr>
+            <tr>
+                <th>Omschrijving</th>
+                <td>{{ afbeeldingen.omschrijving }}</td>
+            </tr>
+            <tr>
+                <th>Alttekst</th>
+                <td>{{ afbeeldingen.alttekst }}</td>
+            </tr>
+            <tr>
+                <th>Timestamp</th>
+                <td>{{ afbeeldingen.timestamp }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('afbeeldingen_index') }}" class="btn btn-primary">Terug</a>
+<br>
+    <a class="btn btn-warning" href="{{ path('afbeeldingen_edit', {'id': afbeeldingen.id}) }}">Bewerken</a>
+<br>
+<br>
+    {{ include('afbeeldingen/_delete_form.html.twig') }}
+{% endblock %}

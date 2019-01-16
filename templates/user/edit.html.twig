@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+<h1>User bewerken</h1>
+<hr>
+{{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+
+<a class="btn btn-primary" href="{{ path('user_index') }}">Terug</a>
+
+{{ include('user/_delete_form.html.twig') }}
+{% endblock %}

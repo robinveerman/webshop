@@ -1,0 +1,48 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
+{% block title %}NAW{% endblock %}
+
+{% block body %}
+    <h1>NAW</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ n_a_w.id }}</td>
+            </tr>
+            <tr>
+                <th>Voornaam</th>
+                <td>{{ n_a_w.Voornaam }}</td>
+            </tr>
+            <tr>
+                <th>Achternaam</th>
+                <td>{{ n_a_w.Achternaam }}</td>
+            </tr>
+            <tr>
+                <th>Adres</th>
+                <td>{{ n_a_w.Adres }}</td>
+            </tr>
+            <tr>
+                <th>Postcode</th>
+                <td>{{ n_a_w.Postcode }}</td>
+            </tr>
+            <tr>
+                <th>Woonplaats</th>
+                <td>{{ n_a_w.Woonplaats }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('n_a_w_index') }}" class="btn btn-primary">Terug</a>
+<br>
+    <a class="btn btn-warning" href="{{ path('n_a_w_edit', {'id': n_a_w.id}) }}">Bewerken</a>
+<br>
+<br>
+    {{ include('n_a_w/_delete_form.html.twig') }}
+{% endblock %}
