@@ -69,13 +69,6 @@ class NAWController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/{id}", name="n_a_w_show", methods="GET")
-	 */
-	public function show( NAW $nAW ): Response {
-		return $this->render( 'naw/show.html.twig', [ 'n_a_w' => $nAW ] );
-	}
-
-	/**
 	 * @Route("/{id}/edit", name="n_a_w_edit", methods="GET|POST")
 	 */
 	public function edit( Request $request, NAW $nAW ): Response {

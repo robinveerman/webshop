@@ -174,6 +174,7 @@ class CartController extends Controller {
 			$factuur = new Factuur();
 			$factuur->setDatum( new \DateTime( "now" ) );
 			$factuur->setKlantId( $this->getUser() );
+			$factuur->setStatus('wachtend op betaling');
 
 			//var_dump($cart);
 			// vullen regels met orderregels.

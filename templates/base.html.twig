@@ -22,20 +22,6 @@
 
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
-    <script>
-        function showNav() {
-            document.getElementById("click").onclick = "hideNav()";
-            document.getElementById("side-nav").style = "display: block";
-
-
-        }
-
-        function hideNav() {
-            document.getElementById("click").onclick = "showNav()";
-            document.getElementById("side-nav").style = "display: none";
-
-        }
-    </script>
 </head>
 <body>
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -71,38 +57,10 @@
 
     </div>
 </div>
-{#<div id="side-nav">#}
-{#{% if app.user %}#}
-{#{% if not is_granted("ROLE_SUPER_ADMIN") %}#}
-{#<br>#}
-{#<a class="p-2 text-dark" href="{{ path('product_index') }}">Producten</a>#}
-{#<br>#}
-{#<br>#}
-{#<a class="p-2 text-dark" href="{{ path('n_a_w_index') }}">Mijn Adresgegevens</a>#}
-{#<br>#}
-{#<br>#}
-{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Mijn bestellingen</a>#}
-{#<br>#}
-{#<br>#}
-{#{% endif %}#}
-{#{% if is_granted("ROLE_SUPER_ADMIN") %}#}
-{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Bestellingen</a>#}
-{#<br>#}
-{#<br>#}
-{#<a class="p-2 text-dark" href="{{ path('user_index') }}">Gebruikers</a>#}
-{#<br>#}
-{#<br>#}
-{#{% endif %}#}
-{#{% endif %}#}
-{#<a class="p-2 text-dark" href="{{ path('cart') }}"><i class="fas fa-shopping-cart"></i> Winkelwagen</a>#}
-{#</div>#}
 <div class="container">
     {% block body %}{% endblock %}
 </div>
-
 </body>
-
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->

@@ -7,9 +7,12 @@
 {% block body %}
     {% if is_granted("ROLE_SUPER_ADMIN") %}
         <h1>Factuur {{ factuur.id }}</h1>
+    {% else %}
+        <h1>Uw Factuur</h1>
     {% endif %}
     <hr>
     <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
+    <h4><b>status:</b> <span class="{{ factuur.status }}">{{ factuur.status }}</span></h4>
     <hr>
     <table class="table table-striped pull-right">
         <thead>

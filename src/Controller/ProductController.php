@@ -8,6 +8,7 @@ use App\Entity\Settings;
 use App\Form\ProductType;
 use App\Form\ReactiesType;
 use App\Repository\ProductRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,8 +23,8 @@ class ProductController extends AbstractController {
 	 * @Route("/", name="product_index", methods="GET")
 	 */
 	public function index( ProductRepository $productRepository ): Response {
-		$em = $this->getDoctrine()->getManager();
-		$settings = $em->getRepository(Settings::class)->findAll();
+		$em       = $this->getDoctrine()->getManager();
+		$settings = $em->getRepository( Settings::class )->findAll();
 
 		return $this->render( 'product/index.html.twig',
 			[
@@ -81,36 +82,44 @@ class ProductController extends AbstractController {
 	/**
 	 * @Route("/{id}", name="product_show")
 	 */
-	public function show( Product $product, Request $request ): Response {
+	public function show( Product $product = null, Request $request ): Response {
 		$em = $this->getDoctrine()->getManager();
 
-		$settings = $em->getRepository(Settings::class)->findAll();
-		$producten = $em->getRepository(Product::class)->findBy(['categorie'=>$product->getCategorie()]);
-		$reacties = $em->getRepository(Reacties::class)->findBy(['product'=> $product],['timestamp'=>'DESC']);
+		if ( $product == null ) {
+			return $this->render( 'default/error.html.twig',
+				[
+					'error' => 'Dit product bestaat niet',
+					'message'=>'Het product dat u probeert te bekijken bestaat niet (meer)'
+				] );
+		}
+
+		$settings  = $em->getRepository( Settings::class )->findAll();
+		$producten = $em->getRepository( Product::class )->findBy( [ 'categorie' => $product->getCategorie() ] );
+		$reacties  = $em->getRepository( Reacties::class )->findBy( [ 'product' => $product ], [ 'timestamp' => 'DESC' ] );
 
 		$reacty = new Reacties();
-		$form = $this->createForm(ReactiesType::class, $reacty);
-		$form->handleRequest($request);
+		$form   = $this->createForm( ReactiesType::class, $reacty );
+		$form->handleRequest( $request );
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$reacty->setUser($this->getUser());
-			$reacty->setProduct($product);
-			$reacty->setIpAdres($request->getClientIp());
-			$reacty->setTimestamp(new \DateTime('now'));
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$reacty->setUser( $this->getUser() );
+			$reacty->setProduct( $product );
+			$reacty->setIpAdres( $request->getClientIp() );
+			$reacty->setTimestamp( new \DateTime( 'now' ) );
 
 			$em = $this->getDoctrine()->getManager();
-			$em->persist($reacty);
+			$em->persist( $reacty );
 			$em->flush();
 
-			return $this->redirectToRoute('product_show', ['id'=>$product->getId()]);
+			return $this->redirectToRoute( 'product_show', [ 'id' => $product->getId() ] );
 		}
 
 		return $this->render( 'product/show.html.twig', [
-			'product' => $product,
-			'related'=>$producten,
-			'reacties'=>$reacties,
-			'settings'=>$settings,
-			'form'=> $form->createView()
+			'product'  => $product,
+			'related'  => $producten,
+			'reacties' => $reacties,
+			'settings' => $settings,
+			'form'     => $form->createView()
 		] );
 	}
 

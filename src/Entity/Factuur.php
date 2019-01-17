@@ -28,12 +28,17 @@ class Factuur
      */
     private $datum;
 
+	/**
+	 * @ORM\Column(type="string", name="status")
+	 */
+	private $status;
+
     protected $regels;
 
 	public function __construct()
-	{
-		$this->regels = new ArrayCollection();
-	}
+      	{
+      		$this->regels = new ArrayCollection();
+      	}
 
     public function getId(): ?int
     {
@@ -68,16 +73,28 @@ class Factuur
 	 * @param ArrayCollection $rgls
 	 */
 	public function setRegels($regels)
-	{
-		$this->regels = $regels;
-	}
+      	{
+      		$this->regels = $regels;
+      	}
 	public function getRegels()
-	{
-		return $this->regels;
-	}
+      	{
+      		return $this->regels;
+      	}
 
 
 	public function __toString() {
-	    return (string) $this->getId() . ' -> ' . $this->getKlantId();
+      	    return (string) $this->getId() . ' -> ' . $this->getKlantId();
+          }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

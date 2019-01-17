@@ -144,3 +144,25 @@
 .w3-content{
     height: 400px;
 }
+
+/* status */
+.wachtend{
+    color: orange;
+    font-weight: bold;
+}
+.In{
+    color: cornflowerblue;
+    font-weight: bold;
+}
+.Afgerond{
+    color: green;
+    font-weight: bold;
+}
+.Geannuleerd{
+    color:red;
+    font-weight: bold;
+}
+.Terugbetaald{
+    color: orange;
+    font-weight: bold;
+}
