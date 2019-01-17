@@ -4,6 +4,7 @@
     {% set base  = 'base.html.twig' %}
 {% endif %}
 {% extends base %}
+{% block title %}Factuur{% endblock %}
 {% block body %}
     {% if is_granted("ROLE_SUPER_ADMIN") %}
         <h1>Factuur {{ factuur.id }}</h1>
@@ -13,6 +14,10 @@
     <hr>
     <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
     <h4><b>status:</b> <span class="{{ factuur.status }}">{{ factuur.status }}</span></h4>
+    <hr>
+    <h4><b>klant:</b>   {{ naw[0].voornaam }} {{ naw[0].achternaam }}</h4>
+    <h4><b>adres:</b>   {{ naw[0].adres }} </h4>
+    <h4><b>woonplaats:</b>   {{ naw[0].woonplaats }} </h4>
     <hr>
     <table class="table table-striped pull-right">
         <thead>
@@ -51,9 +56,21 @@
     <a style="float: left;" href="{{ path('factuur_index') }}">
         <button type="button" class="btn btn-primary">Terug</button>
     </a>
+    <button onclick="print()" class="btn btn-info ml-1">Print factuur</button>
     {% if is_granted('ROLE_ADMIN') %}
         <a style="float: left;" href="{{ path('factuur_edit', { 'id': factuur.id }) }}">
             <button type="button" class="btn btn-warning">Bewerk</button>
         </a>
     {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function print() {
+
+            $("<iframe>")                             // create a new iframe element
+                .hide()                               // make it invisible
+                .attr("src", "" + {{ factuur.id }} +'/print') // point the iframe to the page you want to print
+                .appendTo("body");                    // add iframe to the DOM to cause it to load the page
+        }
+    </script>
 {% endblock %}
