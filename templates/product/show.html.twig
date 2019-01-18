@@ -37,7 +37,7 @@
             <br>
             <br>
             <button class="btn btn-success" onclick="add({{ product.id }}, '{{ product.naam }}')"><i
-                        class="fas fa-cart-plus"></i></button>
+                        class="fas fa-cart-plus"></i> In winkelwagen</button>
         {% else %}
             <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
                         class="fas fa-cart-plus"></i> In winkelwagen</a>

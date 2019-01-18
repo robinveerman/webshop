@@ -170,3 +170,13 @@
 .adres-block{
 
 }
+
+.search{
+    width: 200px;
+    margin-left: 150px !important;
+    position: absolute;
+}
+.search-btn{
+    position: absolute;
+    margin-left: 350px;
+}

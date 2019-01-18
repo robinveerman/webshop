@@ -12,8 +12,8 @@ class SettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('AddCartAjax')
-            ->add('ClearCart')
+            ->add('AddCartAjax', null)
+            ->add('ClearCart', null)
         ;
     }
 

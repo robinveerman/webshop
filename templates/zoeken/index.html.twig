@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resultaten voor {{ search }}{% endblock %}
+
+{% block body %}
+    <h1>Resultaten voor "{{ search }}"</h1>
+    <hr>
+    {% for row in producten %}
+        <div class="card" style="width: 18rem;">
+            <img src="/uploads/{{ row.imagepath[0].imagepath }}" class="card-img-top" alt="{{ row.naam }}"
+                 width="75">
+            <hr>
+            <div class="card-body">
+                <h3 class="card-title">{{ row.naam }}</h3>
+                <h4 class="card-text" style="color: dodgerblue">&euro;{{ row.prijs|number_format(2) }}</h4>
+                <a href="{{ path('cart_add', { 'id': row.id }) }}" class="btn btn-success">In Winkelwagen</a>
+                <a href="{{ path('product_show', { 'id': row.id }) }}" class="btn btn-primary">Bekijk</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger">
+            <h4>Sorry, geen resultaten gevonden voor de zoekopdracht '{{ search }}'</h4>
+        </div>
+    {% endfor %}
+{% endblock %}

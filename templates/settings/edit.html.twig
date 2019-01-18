@@ -5,9 +5,7 @@
 {% block body %}
     <h1>Settings bewerken</h1>
     <hr>
+    {#{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}#}
     {{ include('settings/_form.html.twig', {'button_label': 'Update'}) }}
-    <hr>
-    <br>
-    <a class="btn btn-primary" href="{{ path('settings_index') }}">Terug</a>
 
 {% endblock %}
