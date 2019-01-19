@@ -15,7 +15,7 @@ class ZoekenController extends AbstractController {
 
 		$result = $em->getRepository( Product::class )->createQueryBuilder( 'p' )
 		             ->where( 'p.naam LIKE :search ' )
-		             ->setParameter( ':search', $search )
+		             ->setParameter( ':search', '%'.$search.'%' )
 		             ->getQuery()
 		             ->getResult();
 

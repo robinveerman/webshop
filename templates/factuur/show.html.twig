@@ -15,9 +15,9 @@
     <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
     <h4><b>status:</b> <span class="{{ factuur.status }}">{{ factuur.status }}</span></h4>
     <hr>
-    <h4><b>klant:</b>   {{ naw[0].voornaam }} {{ naw[0].achternaam }}</h4>
-    <h4><b>adres:</b>   {{ naw[0].adres }} </h4>
-    <h4><b>woonplaats:</b>   {{ naw[0].woonplaats }} </h4>
+    <h4><b>klant:</b> {{ naw[0].voornaam }} {{ naw[0].achternaam }}</h4>
+    <h4><b>adres:</b> {{ naw[0].adres }} </h4>
+    <h4><b>woonplaats:</b> {{ naw[0].woonplaats }} </h4>
     <hr>
     <table class="table table-striped pull-right">
         <thead>
@@ -35,12 +35,18 @@
                 <td>{{ regel.aantal }}</td>
                 {% set totaal = regel.aantal %}
                 <td>{{ regel.productId.naam|default('Product bestaat niet meer') }}</td>
-                <td>&euro;
+                <td>
                     {% for product in products %}
                         {% set p = regel.productId %}
                         {% if p.id|default("") == product.id|default("") %}
-                            {{ product.prijs|number_format(2) }}
-                            {% set totaal = (totaal * product.prijs) %}
+                            {% if product.actieprijs != 0 %}
+                                <span class="actie-prijs">&euro; {{ product.prijs|number_format(2) }}</span><br>
+                                &euro; {{ product.actieprijs|number_format(2) }}
+                                {% set totaal = (totaal * product.actieprijs) %}
+                            {% else %}
+                                &euro; {{ product.prijs|number_format(2) }}
+                                {% set totaal = (totaal * product.prijs) %}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>

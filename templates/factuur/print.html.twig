@@ -32,12 +32,18 @@
             <td>{{ regel.aantal }}</td>
             {% set totaal = regel.aantal %}
             <td>{{ regel.productId.naam|default('Product bestaat niet meer') }}</td>
-            <td>&euro;
+            <td>
                 {% for product in products %}
                     {% set p = regel.productId %}
                     {% if p.id|default("") == product.id|default("") %}
-                        {{ product.prijs|number_format(2) }}
-                        {% set totaal = (totaal * product.prijs) %}
+                        {% if product.actieprijs != 0 %}
+                            <del class="actie-prijs">&euro; {{ product.prijs|number_format(2) }}</del><br>
+                            &euro; {{ product.actieprijs|number_format(2) }}
+                            {% set totaal = (totaal * product.actieprijs) %}
+                        {% else %}
+                            &euro; {{ product.prijs|number_format(2) }}
+                            {% set totaal = (totaal * product.prijs) %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </td>

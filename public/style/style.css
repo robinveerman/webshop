@@ -167,8 +167,10 @@
     font-weight: bold;
 }
 
-.adres-block{
-
+.actie-prijs{
+    color:red !important;
+    text-decoration: line-through;
+    opacity: 0.5;
 }
 
 .search{

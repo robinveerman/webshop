@@ -25,7 +25,11 @@
             <hr>
             {% set totaal = 0 %}
             {% for row in regel %}
-                {% set totaal = totaal + row.productId.prijs * row.aantal %}
+                {% if row.productId.actieprijs > 0 %}
+                    {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
+                {% else %}
+                    {% set totaal = totaal + row.productId.prijs * row.aantal %}
+                {% endif %}
             {% endfor %}
             <h3>
                 <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
@@ -38,7 +42,11 @@
             <hr>
             {% set totaal = 0 %}
             {% for row in regel if row.factuurId.datum|date('m') == 'now'|date('m') %}
-                {% set totaal = totaal + row.productId.prijs * row.aantal %}
+                {% if row.productId.actieprijs > 0 %}
+                    {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
+                {% else %}
+                    {% set totaal = totaal + row.productId.prijs * row.aantal %}
+                {% endif %}
             {% endfor %}
             <h3>
                 <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>

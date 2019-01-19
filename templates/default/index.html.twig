@@ -12,7 +12,12 @@
             <hr>
             <div class="card-body">
                 <h3 class="card-title">{{ producten.naam }}</h3>
-                <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
+                {% if producten.actieprijs != 0 %}
+                    <del><h4 class="card-text mr-1 actie-prijs" style="color: red; float: left;">&euro;{{ producten.prijs|number_format(2) }}</h4></del>
+                    <h4 class="card-text" style="color: dodgerblue; float: left;">&euro;{{ producten.actieprijs|number_format(2) }}</h4>
+                {% else %}
+                    <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
+                {% endif %}
                 <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success">In Winkelwagen</a>
                 <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
             </div>

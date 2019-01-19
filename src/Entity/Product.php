@@ -33,6 +33,11 @@ class Product
      */
     private $prijs;
 
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $actieprijs;
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Afbeeldingen")
      */
@@ -196,6 +201,18 @@ class Product
         if ($this->imagepath->contains($imagepath)) {
             $this->imagepath->removeElement($imagepath);
         }
+
+        return $this;
+    }
+
+    public function getActieprijs(): ?float
+    {
+        return $this->actieprijs;
+    }
+
+    public function setActieprijs(float $actieprijs): self
+    {
+        $this->actieprijs = $actieprijs;
 
         return $this;
     }
