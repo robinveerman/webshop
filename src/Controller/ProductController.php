@@ -42,23 +42,26 @@ class ProductController extends AbstractController {
 			$form    = $this->createForm( ProductType::class, $product );
 			$form->handleRequest( $request );
 
+			$image = $form->get( 'imagepath' )->getData();
+
 			if ( $form->isSubmitted() && $form->isValid() ) {
+				if ( empty( $image ) ) {
+					/** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+					$file = $form->get( 'imagepath' )->getData();
 
-				/** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-				$file = $form->get( 'imagepath' )->getData();
+					// Genereert unieke naam voor images
+					$fileName = md5( uniqid() ) . '.' . $file->guessExtension();
 
-				// Genereert unieke naam voor images
-				$fileName = md5( uniqid() ) . '.' . $file->guessExtension();
+					// Verplaatst file naar uploads-directory
+					$file->move(
+						$this->getParameter( 'uploads' ),
+						$fileName
+					);
 
-				// Verplaatst file naar uploads-directory
-				$file->move(
-					$this->getParameter( 'uploads' ),
-					$fileName
-				);
-
-				// Zet het imagePath in de database. Hier staat $product maar je moet dat natuurlijk
-				// aanpassen zodat het klop met jouw database.
-				$product->setImagepath( $fileName );
+					// Zet het imagePath in de database. Hier staat $product maar je moet dat natuurlijk
+					// aanpassen zodat het klop met jouw database.
+					$product->setImagepath( $fileName );
+				}
 
 				// Gooi alles in de DB
 				$em = $this->getDoctrine()->getManager();
@@ -88,8 +91,8 @@ class ProductController extends AbstractController {
 		if ( $product == null ) {
 			return $this->render( 'default/error.html.twig',
 				[
-					'error' => 'Dit product bestaat niet',
-					'message'=>'Het product dat u probeert te bekijken bestaat niet (meer)'
+					'error'   => 'Dit product bestaat niet',
+					'message' => 'Het product dat u probeert te bekijken bestaat niet (meer)'
 				] );
 		}
 

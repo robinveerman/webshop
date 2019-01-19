@@ -20,7 +20,11 @@
                 {% else %}
                     <h4 class="card-text" style="color: dodgerblue">&euro;{{ row.prijs|number_format(2) }}</h4>
                 {% endif %}
-                <a href="{{ path('cart_add', { 'id': row.id }) }}" class="btn btn-success">In Winkelwagen</a>
+                {% if row.voorraad != 0 %}
+                    <a href="{{ path('cart_add', { 'id': row.id }) }}" class="btn btn-success">In Winkelwagen</a>
+                {% else %}
+                    <button disabled="disabled" class="btn btn-danger">Uitverkocht</button>
+                {% endif %}
                 <a href="{{ path('product_show', { 'id': row.id }) }}" class="btn btn-primary">Bekijk</a>
             </div>
         </div>

@@ -19,6 +19,9 @@
         <tr>
             <th>Afbeelding</th>
             <th>Naam</th>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                <th>Voorraad</th>
+            {% endif %}
             <th>Maat</th>
             <th>Prijs</th>
             <th>actions</th>
@@ -31,8 +34,26 @@
                         <img src="/uploads/{{ row.imagepath }}" width="100px">
                     {% endfor %}</td>
                 <td>{{ product.naam }}</td>
+                {% if is_granted("ROLE_SUPER_ADMIN") %}
+                    {% if product.voorraad >= 10 %}
+                        <td style="color: green; font-weight: bold">{{ product.voorraad }} op voorraad</td>
+                    {% elseif product.voorraad <= 9 and  product.voorraad >= 4 %}
+                        <td style="color: orange; font-weight: bold">{{ product.voorraad }} op voorraad</td>
+                    {% elseif product.voorraad < 4 and product.voorraad != 0 %}
+                        <td style="color: red; font-weight: bold">{{ product.voorraad }} op voorraad</td>
+                    {% elseif product.voorraad == 0 %}
+                        <td style="color: red; font-weight: bold">uitverkocht</td>
+                    {% else %}
+                        <td>Geen voorraad informatie</td>
+                    {% endif %}
+                {% endif %}
                 <td>{{ product.maat }}</td>
-                <td>&euro;{{ product.prijs|number_format(2) }}</td>
+                {% if product.actieprijs != 0 %}
+                    <td><span class="actie-prijs">&euro;{{ product.prijs|number_format(2) }}</span><br>
+                        &euro;{{ product.actieprijs|number_format(2) }}</td>
+                {% else %}
+                    <td>&euro;{{ product.prijs|number_format(2) }}</td>
+                {% endif %}
 
                 <td>
                     <a class="btn btn-primary" href="{{ path('product_show', {'id': product.id}) }}">Bekijk</a>
@@ -40,8 +61,12 @@
                         <button class="btn btn-success" onclick="add({{ product.id }}, '{{ product.naam }}')"><i
                                     class="fas fa-cart-plus"></i></button>
                     {% else %}
-                        <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
-                                    class="fas fa-cart-plus"></i></a>
+                        {% if product.voorraad != 0 %}
+                            <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                                        class="fas fa-cart-plus"></i> in winkelwagen</a>
+                        {% else %}
+                            <button class="btn btn-danger" disabled>Uitverkocht</button>
+                        {% endif %}
                     {% endif %}
                     {% if is_granted("ROLE_SUPER_ADMIN") %}
                         <a class="btn btn-warning" href="{{ path('product_edit', {'id': product.id}) }}">Bewerk</a>
@@ -56,6 +81,9 @@
         {% endfor %}
         </tbody>
     </table>
+    <br>
+    <br>
+    <br>
     <div class="message" aria-live="polite" aria-atomic="true"
          style="position: fixed; min-height: 200px;">
         <div class="toast" style="position: absolute; top: 0; right: 0;">

@@ -34,9 +34,14 @@ class Product
     private $prijs;
 
 	/**
-	 * @ORM\Column(type="float")
+	 * @ORM\Column(type="float", name="actieprijs", nullable=true)
 	 */
 	private $actieprijs;
+
+	/**
+	 * @ORM\Column(type="integer", name="voorraad", nullable=true)
+	 */
+	private $voorraad;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Afbeeldingen")
@@ -213,6 +218,18 @@ class Product
     public function setActieprijs(float $actieprijs): self
     {
         $this->actieprijs = $actieprijs;
+
+        return $this;
+    }
+
+    public function getVoorraad(): ?int
+    {
+        return $this->voorraad;
+    }
+
+    public function setVoorraad(int $voorraad): self
+    {
+        $this->voorraad = $voorraad;
 
         return $this;
     }

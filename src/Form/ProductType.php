@@ -18,6 +18,7 @@ class ProductType extends AbstractType
             ->add('maat')
             ->add('prijs')
             ->add('actieprijs')
+            ->add('voorraad')
             ->add('categorie')
             ->add('relatedProducts', null, ['attr'=>['class'=>'js-example-basic-multiple']])
             ->add('omschrijving')

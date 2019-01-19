@@ -19,11 +19,16 @@
 
     <div class="w3-content w3-display-container"
          style="width: 550px; float: left; border: solid 2px; height: 400px; object-fit: cover;">
-        {% for row in product.imagepath %}
-            <img class="mySlides" src="/uploads/{{ row.imagepath }}" style=" margin-left: 90px; object-fit: cover">
-        {% endfor %}
-        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+        {% if product.imagepath|length > 1 %}
+            {% for row in product.imagepath %}
+                <img class="mySlides" src="/uploads/{{ row.imagepath }}" style=" margin-left: 90px; object-fit: cover">
+            {% endfor %}
+            <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+        {% else %}
+            <img class="ml-5 mt-5" src="/uploads/{{ product.imagepath[0].imagepath }}" width="300" height="300">
+        {% endif %}
+
     </div>
 
     <br>
@@ -34,7 +39,7 @@
             <h4><b>Maat: </b>{{ product.maat }}</h4>
         {% endif %}
         {% if product.actieprijs != 0 %}
-            <h2 class="actie-prijs" >&euro;{{ product.prijs|number_format(2) }}</h2>
+            <h2 class="actie-prijs">&euro;{{ product.prijs|number_format(2) }}</h2>
             <h2>&euro;{{ product.actieprijs|number_format(2) }}</h2>
         {% else %}
             <h2>&euro;{{ product.prijs|number_format(2) }}</h2>
@@ -46,8 +51,12 @@
                         class="fas fa-cart-plus"></i> In winkelwagen
             </button>
         {% else %}
-            <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
-                        class="fas fa-cart-plus"></i> In winkelwagen</a>
+            {% if product.voorraad != 0 %}
+                <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                            class="fas fa-cart-plus"></i> In winkelwagen</a>
+            {% else %}
+                <h3 style="color:red">Dit product is uitverkocht!</h3>
+            {% endif %}
         {% endif %}
     </div>
     <div class="product-beschrijving">
@@ -68,14 +77,22 @@
                     <hr>
                     <div class="card-body">
                         <h3 class="card-title">{{ producten.naam }}</h3>
-                        <h4 class="card-text" style="color: dodgerblue">
-                            &euro;{{ producten.prijs|number_format(2) }}</h4>
+                        {% if producten.actieprijs != 0 %}
+                            <h4 class="actie-prijs">&euro;{{ producten.prijs|number_format(2) }}</h4>
+                            <h4>&euro;{{ producten.actieprijs|number_format(2) }}</h4>
+                        {% else %}
+                            <h4>&euro;{{ producten.prijs|number_format(2) }}</h4>
+                        {% endif %}
                         {% if settings[0].AddCartAjax == 1 %}
                             <button class="btn btn-success" onclick="add({{ product.id }}, '{{ product.naam }}')"><i
                                         class="fas fa-cart-plus"></i></button>
                         {% else %}
-                            <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
-                                        class="fas fa-cart-plus"></i></a>
+                            {% if producten.voorraad != 0 %}
+                                <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success"><i
+                                            class="fas fa-cart-plus"></i></a>
+                            {% else %}
+                                <button class="btn btn-danger" disabled>uitverkocht</button>
+                            {% endif %}
                         {% endif %}
                         <br>
                         <br>
@@ -84,21 +101,29 @@
                 </div>
             {% endfor %}
         {% else %}
-            {% for producten in producten %}
+            {% for row in producten %}
                 <div class="product-card" style="width: 18rem;">
-                    <img src="/uploads/{{ producten.imagepath[0].imagepath }}" class="card-img-top"
-                         alt="{{ producten.naam }}"
+                    <img src="/uploads/{{ row.imagepath[0].imagepath }}" class="card-img-top"
+                         alt="{{ row.naam }}"
                          width="75">
                     <hr>
                     <div class="card-body">
-                        <h3 class="card-title">{{ producten.naam }}</h3>
-                        <h4 class="card-text" style="color: dodgerblue">
-                            &euro;{{ producten.prijs|number_format(2) }}</h4>
-                        <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success"><i
-                                    class="fas fa-cart-plus"></i></a>
+                        <h3 class="card-title">{{ row.naam }}</h3>
+                        {% if row.actieprijs != 0 %}
+                            <h4 class="actie-prijs">&euro;{{ row.prijs|number_format(2) }}</h4>
+                            <h4>&euro;{{ row.actieprijs|number_format(2) }}</h4>
+                        {% else %}
+                            <h4>&euro;{{ row.prijs|number_format(2) }}</h4>
+                        {% endif %}
+                        {% if row.voorraad != 0 %}
+                            <a href="{{ path('cart_add', { 'id': row.id }) }}" class="btn btn-success"><i
+                                        class="fas fa-cart-plus"></i></a>
+                        {% else %}
+                            <p style="color:red">uitverkocht</p>
+                        {% endif %}
                         <br>
                         <br>
-                        <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
+                        <a href="{{ path('product_show', { 'id': row.id }) }}" class="btn btn-primary">Bekijk</a>
                     </div>
                 </div>
             {% endfor %}

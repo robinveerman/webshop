@@ -109,10 +109,16 @@ class CartController extends Controller {
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		$cart    = $session->get( 'cart', array() );
 
+		if ( $product->getVoorraad() == 0 ) {
+			return $this->render( 'default/error.html.twig', [
+				'error'   => 'Product uitverkocht',
+				'message' => 'Sorry, dit product is (tijdelijk) uitverkocht.'
+			] );
+		}
+
 		// check if the $id already exists in it.
 		if ( $product == null ) {
 			return $this->render( 'default/error.html.twig', [
-				'code'    => 104,
 				'error'   => 'Dit product bestaat niet',
 				'message' => 'Het product dat u probeert toe te voegen aan uw winkelwagen bestaat niet (meer) '
 			] );
@@ -152,9 +158,23 @@ class CartController extends Controller {
 		// $cart = $session->set('cart', '');
 		$cart = $session->get( 'cart', array() );
 
+		// voorraad aanpassen
+		foreach ( $cart as $product => $quantity ) {
+			$em       = $this->getDoctrine()->getManager();
+			$products = $em->getRepository( Product::class )->find( $product );
+
+			$oud   = $products->getVoorraad();
+			$nieuw = $oud - $quantity;
+
+			$products->setVoorraad( $nieuw );
+
+			$em->persist( $products );
+			$em->flush();
+
+		}
+
 		if ( $this->getUser() == null ) {
 			return $this->render( 'default/error.html.twig', [
-				'code'    => 105,
 				'error'   => 'Niet ingelogd',
 				'message' => 'Log in om af te rekenen'
 			] );
@@ -174,7 +194,7 @@ class CartController extends Controller {
 			$factuur = new Factuur();
 			$factuur->setDatum( new \DateTime( "now" ) );
 			$factuur->setKlantId( $this->getUser() );
-			$factuur->setStatus('wachtend op betaling');
+			$factuur->setStatus( 'wachtend op betaling' );
 
 			//var_dump($cart);
 			// vullen regels met orderregels.
