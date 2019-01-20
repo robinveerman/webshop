@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product{% endblock %}
+{% block title %}{{ product.naam }} | Webshop{% endblock %}
 {% block stylesheets %}
     <style>
         .mySlides {
@@ -9,8 +9,6 @@
     </style>
 {% endblock %}
 {% block body %}
-
-
     <div class="product-row">
         <a href="{{ path('categorie_show', {'id': product.categorie.id}) }}">
             <i class="fas fa-chevron-left"></i> {{ product.categorie }}
@@ -23,7 +21,7 @@
             {% set avg = sumratings / ratings|length %}
             {% if avg >= 6 %}
                 <div class="avg-rating avg-green">{{ avg|number_format(1,',','.') }}</div>
-            {% elseif avg <= 5.9 %}
+            {% elseif avg <= 5.9 and avg >= 5.1  %}
                 <div class="avg-rating avg-orange">{{ avg|number_format(1,',','.') }}</div>
             {% elseif avg <= 5 %}
                 <div class="avg-rating avg-red">{{ avg|number_format(1,',','.') }}</div>
@@ -34,17 +32,20 @@
     <div class="w3-content w3-display-container">
         {% if product.imagepath|length > 1 %}
             {% for row in product.imagepath %}
-                <img  width="300" height="300" class="mySlides product-img" src="/uploads/{{ row.imagepath }}">
+                <img alt="{{ product.omschrijving }}" width="300" height="300" class="mySlides product-img"
+                     src="/uploads/{{ row.imagepath }}">
             {% endfor %}
             <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
             <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
         {% else %}
-            <img class="product-img" style="object-fit: cover" src="/uploads/{{ product.imagepath[0].imagepath }}"
+            <img alt="{{ product.omschrijving }}" class="product-img" style="object-fit: cover"
+                 src="/uploads/{{ product.imagepath[0].imagepath }}"
                  width="300" height="300">
         {% endif %}
     </div>
     <br>
     <div class="product-info">
+        <a href="{{ path('merk_show', {'id': product.merk.id}) }}">{{ product.merk }}</a>
         <h1>{{ product.naam }}</h1>
         {% if product.maat != null %}
             <h4><b>Maat: </b>{{ product.maat }}</h4>
@@ -63,7 +64,7 @@
             </button>
         {% else %}
             {% if product.voorraad != 0 %}
-                <a class="btn btn-success mt-5" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                <a class="btn btn-success mt-3" href="{{ path('cart_add', {'id': product.id}) }}"><i
                             class="fas fa-cart-plus"></i> In winkelwagen</a>
             {% else %}
                 <h3 style="color:red">Dit product is uitverkocht!</h3>
@@ -77,7 +78,7 @@
         <hr>
     </div>
     <div class="related-products">
-        <h2>Gerelateerde producten</h2>
+        <h2>Gerelateerd</h2>
         <hr>
         {% if product.relatedProducts != null %}
             {% for producten in product.relatedProducts %}
@@ -148,6 +149,7 @@
         <button class="btn btn-success">{{ button_label|default('Plaatsen') }}</button>
         {{ form_end(form) }}
         <br>
+        <table id="lijst">
         {% for row in reacties %}
             <div class="jumbotron comment">
                 <b>{{ row.user ? row.user : 'Anoniem' }}</b><br>
@@ -155,7 +157,7 @@
                 {% if row.rating %}
                     {% if row.rating >= 10 %}
                         <div class="product-rating green">{{ row.rating|number_format(1,',','.') }}</div>
-                    {% elseif row.rating <= 6.9 %}
+                    {% elseif row.rating <= 6.9 and row.rating >= 5.6 %}
                         <div class="product-rating orange">{{ row.rating|number_format(1,',','.') }}</div>
                     {% elseif row.rating <= 5.5 %}
                         <div class="product-rating red">{{ row.rating|number_format(1,',','.') }}</div>
@@ -169,6 +171,7 @@
                 {% endif %}
             </div>
         {% endfor %}
+        </table>
         <div class="message" aria-live="polite" aria-atomic="true"
              style="position: fixed; min-height: 200px;">
             <div class="toast" style="position: absolute; top: 0; right: 0;">
@@ -235,5 +238,15 @@
             }
             x[slideIndex - 1].style.display = "block";
         }
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            var table = $('#lijst').DataTable({
+                stateSave: true
+            });
+            table.buttons().container()
+                .appendTo($('.col-sm-6:eq(0)', table.table().container()));
+            $('.dropdown-toggle').dropdown();
+        });
     </script>
 {% endblock %}

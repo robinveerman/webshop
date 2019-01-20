@@ -234,3 +234,15 @@
     position: absolute;
     margin-left: 350px;
 }
+/* Merken */
+.merk-img{
+    width: 20%;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+.merk-info p{
+    text-align: justify;
+    width: 79%;
+    float: right;
+
+}

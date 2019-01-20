@@ -31,7 +31,7 @@
         {% for product in products %}
             <tr>
                 <td>{% for row in product.imagepath %}
-                        <img src="/uploads/{{ row.imagepath }}" width="100px">
+                        <img src="/uploads/{{ row.imagepath}}" width="100px">
                     {% endfor %}</td>
                 <td>{{ product.naam }}</td>
                 {% if is_granted("ROLE_SUPER_ADMIN") %}

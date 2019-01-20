@@ -34,6 +34,11 @@ class Product
     private $prijs;
 
 	/**
+	 * @ORM\ManyToOne(targetEntity="Merk")
+	 */
+	private $merk;
+
+	/**
 	 * @ORM\Column(type="float", name="actieprijs")
 	 */
 	private $actieprijs;
@@ -230,6 +235,18 @@ class Product
     public function setVoorraad(int $voorraad): self
     {
         $this->voorraad = $voorraad;
+
+        return $this;
+    }
+
+    public function getMerk(): ?Merk
+    {
+        return $this->merk;
+    }
+
+    public function setMerk(?Merk $merk): self
+    {
+        $this->merk = $merk;
 
         return $this;
     }
