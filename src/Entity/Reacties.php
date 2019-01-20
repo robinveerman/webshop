@@ -27,6 +27,11 @@ class Reacties
      */
     private $text;
 
+	/**
+	 * @ORM\Column(type="integer", length=3)
+	 */
+	private $rating;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -103,6 +108,18 @@ class Reacties
     public function setTimestamp(\DateTimeInterface $timestamp): self
     {
         $this->timestamp = $timestamp;
+
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(int $rating): self
+    {
+        $this->rating = $rating;
 
         return $this;
     }

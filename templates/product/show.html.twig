@@ -1,10 +1,3 @@
-{#{% if is_granted("ROLE_SUPER_ADMIN") %}#}
-    {#{% set base  = 'base2.html.twig' %}#}
-{#{% else %}#}
-    {#{% set base  = 'base.html.twig' %}#}
-{#{% endif %}#}
-{#{% extends base %}#}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Product{% endblock %}
@@ -17,22 +10,40 @@
 {% endblock %}
 {% block body %}
 
-    <div class="w3-content w3-display-container"
-         style="width: 550px; float: left; border: solid 2px; height: 400px; object-fit: cover;">
+
+    <div class="product-row">
+        <a href="{{ path('categorie_show', {'id': product.categorie.id}) }}">
+            <i class="fas fa-chevron-left"></i> {{ product.categorie }}
+        </a>
+        {% if ratings %}
+            {% set sumratings = 0 %}
+            {% for rating in reacties if rating.rating != 0 %}
+                {% set sumratings = sumratings + rating.rating %}
+            {% endfor %}
+            {% set avg = sumratings / ratings|length %}
+            {% if avg >= 6 %}
+                <div class="avg-rating avg-green">{{ avg|number_format(1,',','.') }}</div>
+            {% elseif avg <= 5.9 %}
+                <div class="avg-rating avg-orange">{{ avg|number_format(1,',','.') }}</div>
+            {% elseif avg <= 5 %}
+                <div class="avg-rating avg-red">{{ avg|number_format(1,',','.') }}</div>
+            {% endif %}
+            <p style="float:right">Gemmidelde score:&nbsp;</p>
+        {% endif %}
+    </div>
+    <div class="w3-content w3-display-container">
         {% if product.imagepath|length > 1 %}
             {% for row in product.imagepath %}
-                <img class="mySlides" src="/uploads/{{ row.imagepath }}" style=" margin-left: 90px; object-fit: cover">
+                <img  width="300" height="300" class="mySlides product-img" src="/uploads/{{ row.imagepath }}">
             {% endfor %}
             <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
             <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
         {% else %}
-            <img class="ml-5 mt-5" src="/uploads/{{ product.imagepath[0].imagepath }}" width="300" height="300">
+            <img class="product-img" style="object-fit: cover" src="/uploads/{{ product.imagepath[0].imagepath }}"
+                 width="300" height="300">
         {% endif %}
-
     </div>
-
     <br>
-
     <div class="product-info">
         <h1>{{ product.naam }}</h1>
         {% if product.maat != null %}
@@ -52,7 +63,7 @@
             </button>
         {% else %}
             {% if product.voorraad != 0 %}
-                <a class="btn btn-success" href="{{ path('cart_add', {'id': product.id}) }}"><i
+                <a class="btn btn-success mt-5" href="{{ path('cart_add', {'id': product.id}) }}"><i
                             class="fas fa-cart-plus"></i> In winkelwagen</a>
             {% else %}
                 <h3 style="color:red">Dit product is uitverkocht!</h3>
@@ -141,6 +152,15 @@
             <div class="jumbotron comment">
                 <b>{{ row.user ? row.user : 'Anoniem' }}</b><br>
                 <i>{{ row.timestamp|date }}</i>
+                {% if row.rating %}
+                    {% if row.rating >= 10 %}
+                        <div class="product-rating green">{{ row.rating|number_format(1,',','.') }}</div>
+                    {% elseif row.rating <= 6.9 %}
+                        <div class="product-rating orange">{{ row.rating|number_format(1,',','.') }}</div>
+                    {% elseif row.rating <= 5.5 %}
+                        <div class="product-rating red">{{ row.rating|number_format(1,',','.') }}</div>
+                    {% endif %}
+                {% endif %}
                 <hr>
                 <p>{{ row.text }}</p>
                 {% if is_granted("ROLE_SUPER_ADMIN") %}

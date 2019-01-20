@@ -25,7 +25,8 @@
             <hr>
             {% set totaal = 0 %}
             {% for row in regel %}
-                {% if row.productId.actieprijs > 0 %}
+                {% if row.productId.actieprijs is not defined %}
+                    {% dump(row.productId) %}
                     {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
                 {% else %}
                     {% set totaal = totaal + row.productId.prijs * row.aantal %}

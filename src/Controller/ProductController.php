@@ -83,7 +83,7 @@ class ProductController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/{id}", name="product_show")
+	 * @Route("/{id}", name="product_show", methods="POST|GET")
 	 */
 	public function show( Product $product = null, Request $request ): Response {
 		$em = $this->getDoctrine()->getManager();
@@ -98,6 +98,11 @@ class ProductController extends AbstractController {
 
 		$settings  = $em->getRepository( Settings::class )->findAll();
 		$producten = $em->getRepository( Product::class )->findBy( [ 'categorie' => $product->getCategorie() ] );
+		$ratings   = $em->getRepository( Reacties::class )->createQueryBuilder( 'r' )
+		                ->where( 'r.rating != 0 and r.product = :product ' )
+		                ->setParameter( ':product', $product->getId() )
+		                ->getQuery()
+		                ->getResult();
 		$reacties  = $em->getRepository( Reacties::class )->findBy( [ 'product' => $product ], [ 'timestamp' => 'DESC' ] );
 
 		$reacty = new Reacties();
@@ -122,6 +127,7 @@ class ProductController extends AbstractController {
 			'related'  => $producten,
 			'reacties' => $reacties,
 			'settings' => $settings,
+			'ratings'  => $ratings,
 			'form'     => $form->createView()
 		] );
 	}

@@ -34,7 +34,7 @@ class Product
     private $prijs;
 
 	/**
-	 * @ORM\Column(type="float", name="actieprijs", nullable=true)
+	 * @ORM\Column(type="float", name="actieprijs")
 	 */
 	private $actieprijs;
 
