@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% block metaDescripton %}{{ product.omschrijving }}{% endblock %}
 {% block title %}{{ product.naam }} | Webshop{% endblock %}
 {% block stylesheets %}
     <style>
@@ -21,7 +21,7 @@
             {% set avg = sumratings / ratings|length %}
             {% if avg >= 6 %}
                 <div class="avg-rating avg-green">{{ avg|number_format(1,',','.') }}</div>
-            {% elseif avg <= 5.9 and avg >= 5.1  %}
+            {% elseif avg <= 5.9 and avg >= 5.1 %}
                 <div class="avg-rating avg-orange">{{ avg|number_format(1,',','.') }}</div>
             {% elseif avg <= 5 %}
                 <div class="avg-rating avg-red">{{ avg|number_format(1,',','.') }}</div>
@@ -69,6 +69,11 @@
             {% else %}
                 <h3 style="color:red">Dit product is uitverkocht!</h3>
             {% endif %}
+        {% endif %}
+        {% if product.voorraad <= 3 %}
+            <br>
+            <br>
+            <div class="alert alert-danger"><b>Let op!</b> Dit product is bijna uitverkocht!</div>
         {% endif %}
     </div>
     <div class="product-beschrijving">
@@ -150,27 +155,27 @@
         {{ form_end(form) }}
         <br>
         <table id="lijst">
-        {% for row in reacties %}
-            <div class="jumbotron comment">
-                <b>{{ row.user ? row.user : 'Anoniem' }}</b><br>
-                <i>{{ row.timestamp|date }}</i>
-                {% if row.rating %}
-                    {% if row.rating >= 10 %}
-                        <div class="product-rating green">{{ row.rating|number_format(1,',','.') }}</div>
-                    {% elseif row.rating <= 6.9 and row.rating >= 5.6 %}
-                        <div class="product-rating orange">{{ row.rating|number_format(1,',','.') }}</div>
-                    {% elseif row.rating <= 5.5 %}
-                        <div class="product-rating red">{{ row.rating|number_format(1,',','.') }}</div>
+            {% for row in reacties %}
+                <div class="jumbotron comment">
+                    <b>{{ row.user ? row.user : 'Anoniem' }}</b><br>
+                    <i>{{ row.timestamp|date }}</i>
+                    {% if row.rating %}
+                        {% if row.rating >= 10 %}
+                            <div class="product-rating green">{{ row.rating|number_format(1,',','.') }}</div>
+                        {% elseif row.rating <= 6.9 and row.rating >= 5.6 %}
+                            <div class="product-rating orange">{{ row.rating|number_format(1,',','.') }}</div>
+                        {% elseif row.rating <= 5.5 %}
+                            <div class="product-rating red">{{ row.rating|number_format(1,',','.') }}</div>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <hr>
-                <p>{{ row.text }}</p>
-                {% if is_granted("ROLE_SUPER_ADMIN") %}
                     <hr>
-                    <a href="{{ path('reacties_edit', {'id': row.id}) }}" class="btn btn-warning">Bewerken</a>
-                {% endif %}
-            </div>
-        {% endfor %}
+                    <p>{{ row.text }}</p>
+                    {% if is_granted("ROLE_SUPER_ADMIN") %}
+                        <hr>
+                        <a href="{{ path('reacties_edit', {'id': row.id}) }}" class="btn btn-warning">Bewerken</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </table>
         <div class="message" aria-live="polite" aria-atomic="true"
              style="position: fixed; min-height: 200px;">
