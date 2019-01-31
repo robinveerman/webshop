@@ -20,17 +20,17 @@ class UserController extends AbstractController {
 	 */
 	public function index(): Response {
 //		if ( $this->isGranted( "ROLE_SUPER_ADMIN" ) ) {
-			$users = $this->getDoctrine()
-			              ->getRepository( User::class )
-			              ->findAll();
-			$naw   = $this->getDoctrine()
-			              ->getRepository( NAW::class )
-			              ->findAll();
+		$users = $this->getDoctrine()
+		              ->getRepository( User::class )
+		              ->findAll();
+		$naw   = $this->getDoctrine()
+		              ->getRepository( NAW::class )
+		              ->findAll();
 
-			return $this->render( 'user/index.html.twig', [
-				'users' => $users,
-				'naw'   => $naw,
-			] );
+		return $this->render( 'user/index.html.twig', [
+			'users' => $users,
+			'naw'   => $naw,
+		] );
 //		} else {
 //			return $this->render( "default/accessdenied.html.twig" );
 //		}
@@ -41,22 +41,22 @@ class UserController extends AbstractController {
 	 */
 	public function new( Request $request ): Response {
 //		if ( $this->isGranted( "ROLE_SUPER_ADMIN" ) ) {
-			$user = new User();
-			$form = $this->createForm( UserType::class, $user );
-			$form->handleRequest( $request );
+		$user = new User();
+		$form = $this->createForm( UserType::class, $user );
+		$form->handleRequest( $request );
 
-			if ( $form->isSubmitted() && $form->isValid() ) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist( $user );
-				$em->flush();
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$em = $this->getDoctrine()->getManager();
+			$em->persist( $user );
+			$em->flush();
 
-				return $this->redirectToRoute( 'user_index' );
-			}
+			return $this->redirectToRoute( 'user_index' );
+		}
 
-			return $this->render( 'user/new.html.twig', [
-				'user' => $user,
-				'form' => $form->createView(),
-			] );
+		return $this->render( 'user/new.html.twig', [
+			'user' => $user,
+			'form' => $form->createView(),
+		] );
 //		} else {
 //			return $this->render( 'default/accessdenied.html.twig' );
 //		}
@@ -67,7 +67,7 @@ class UserController extends AbstractController {
 	 */
 	public function show( User $user ): Response {
 //		if ( $this->isGranted( "ROLE_SUPER_ADMIN" ) ) {
-			return $this->render( 'user/show.html.twig', [ 'user' => $user ] );
+		return $this->render( 'user/show.html.twig', [ 'user' => $user ] );
 //		} else {
 //			return $this->render( 'default/accessdenied.html.twig' );
 //		}
@@ -78,19 +78,19 @@ class UserController extends AbstractController {
 	 */
 	public function edit( Request $request, User $user ): Response {
 //		if ( $this->isGranted( "ROLE_SUPER_ADMIN" ) ) {
-			$form = $this->createForm( UserType::class, $user );
-			$form->handleRequest( $request );
+		$form = $this->createForm( UserType::class, $user );
+		$form->handleRequest( $request );
 
-			if ( $form->isSubmitted() && $form->isValid() ) {
-				$this->getDoctrine()->getManager()->flush();
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$this->getDoctrine()->getManager()->flush();
 
-				return $this->redirectToRoute( 'user_index', [ 'id' => $user->getId() ] );
-			}
+			return $this->redirectToRoute( 'user_index', [ 'id' => $user->getId() ] );
+		}
 
-			return $this->render( 'user/edit.html.twig', [
-				'user' => $user,
-				'form' => $form->createView(),
-			] );
+		return $this->render( 'user/edit.html.twig', [
+			'user' => $user,
+			'form' => $form->createView(),
+		] );
 //		} else {
 //			return $this->render( 'default/accessdenied.html.twig' );
 //		}
@@ -146,5 +146,26 @@ class UserController extends AbstractController {
 		} else {
 			return $this->render( 'default/accessdenied.html.twig' );
 		}
+	}
+
+	/**
+	 * @Route("/block/{user}", name="blokken_user")
+	 */
+	public function block( User $user ) {
+		$em = $this->getDoctrine()->getManager();
+
+		$user = $em->getRepository( User::class )->find( $user );
+
+		if ( $user->isEnabled() ) {
+			$user->setEnabled( 0 );
+		} else {
+			$user->setEnabled( 1 );
+		}
+
+		$em->persist( $user );
+		$em->flush();
+
+		return $this->redirectToRoute( 'user_index' );
+
 	}
 }
