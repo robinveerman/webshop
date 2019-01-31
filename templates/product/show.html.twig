@@ -45,7 +45,7 @@
     </div>
     <br>
     <div class="product-info">
-        <a href="{{ path('merk_show', {'id': product.merk.id}) }}">{{ product.merk }}</a>
+        <a href="{{ path('merk_show', {'merk': product.merk.naam}) }}">{{ product.merk }}</a>
         <h1>{{ product.naam }}</h1>
         {% if product.maat != null %}
             <h4><b>Maat: </b>{{ product.maat }}</h4>
