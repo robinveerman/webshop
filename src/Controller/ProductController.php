@@ -105,18 +105,19 @@ class ProductController extends AbstractController {
 		                ->getResult();
 		$reacties  = $em->getRepository( Reacties::class )->findBy( [ 'product' => $product ], [ 'timestamp' => 'DESC' ] );
 
-		$reacty = new Reacties();
-		$form   = $this->createForm( ReactiesType::class, $reacty );
+		// Reactie toevoegen
+		$reactie = new Reacties();
+		$form   = $this->createForm( ReactiesType::class, $reactie );
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
-			$reacty->setUser( $this->getUser() );
-			$reacty->setProduct( $product );
-			$reacty->setIpAdres( $request->getClientIp() );
-			$reacty->setTimestamp( new \DateTime( 'now' ) );
+			$reactie->setUser( $this->getUser() );
+			$reactie->setProduct( $product );
+			$reactie->setIpAdres( $request->getClientIp() );
+			$reactie->setTimestamp( new \DateTime( 'now' ) );
 
 			$em = $this->getDoctrine()->getManager();
-			$em->persist( $reacty );
+			$em->persist( $reactie );
 			$em->flush();
 
 			return $this->redirectToRoute( 'product_show', [ 'id' => $product->getId() ] );

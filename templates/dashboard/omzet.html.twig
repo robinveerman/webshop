@@ -1,0 +1,28 @@
+{% extends 'base2.html.twig' %}
+{% block body %}
+    <h1>Omzet Totaal</h1>
+    <hr>
+    <a href="{{ path('dashboard') }}">Terug</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Maand</th>
+            <th>Omzet</th>
+        </tr>
+        </thead>
+        {% for rows in data %}
+            <tr>
+                <td>Omzet maand {{ rows }}</td>
+                {% set totaal = 0 %}
+                {% for row in regel if row.factuurId.datum|date('m') == rows|join %}
+                    {% if row.productId.actieprijs > 0 %}
+                        {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
+                    {% else %}
+                        {% set totaal = totaal + row.productId.prijs * row.aantal %}
+                    {% endif %}
+                {% endfor %}
+                <td>&euro; {{ totaal|number_format(2,',','.') }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ZoekenController extends AbstractController {
+
 	/**
 	 * @Route("/zoeken/{search}", name="zoeken")
 	 */
