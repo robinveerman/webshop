@@ -33,21 +33,6 @@ class Product
      */
     private $prijs;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Merk")
-	 */
-	private $merk;
-
-	/**
-	 * @ORM\Column(type="float", name="actieprijs")
-	 */
-	private $actieprijs;
-
-	/**
-	 * @ORM\Column(type="integer", name="voorraad", nullable=true)
-	 */
-	private $voorraad;
-
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Afbeeldingen")
      */
@@ -211,42 +196,6 @@ class Product
         if ($this->imagepath->contains($imagepath)) {
             $this->imagepath->removeElement($imagepath);
         }
-
-        return $this;
-    }
-
-    public function getActieprijs(): ?float
-    {
-        return $this->actieprijs;
-    }
-
-    public function setActieprijs(float $actieprijs): self
-    {
-        $this->actieprijs = $actieprijs;
-
-        return $this;
-    }
-
-    public function getVoorraad(): ?int
-    {
-        return $this->voorraad;
-    }
-
-    public function setVoorraad(int $voorraad): self
-    {
-        $this->voorraad = $voorraad;
-
-        return $this;
-    }
-
-    public function getMerk(): ?Merk
-    {
-        return $this->merk;
-    }
-
-    public function setMerk(?Merk $merk): self
-    {
-        $this->merk = $merk;
 
         return $this;
     }

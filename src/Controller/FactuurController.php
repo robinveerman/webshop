@@ -90,6 +90,9 @@ class FactuurController extends AbstractController {
 			$products = $em->getRepository( Product::class )->findall();
 			$naw      = $em->getRepository( NAW::class )->findBy( array( 'user' => $factuur->getKlantId() ) );
 
+			// dump($regels);
+//	    $deleteForm = $this->createDeleteForm($factuur);
+
 			return $this->render( 'factuur/show.html.twig', array(
 				'factuur'  => $factuur,
 				'naw'      => $naw,
@@ -118,28 +121,35 @@ class FactuurController extends AbstractController {
 
 			$factuur->setRegels( $regels );
 
-			$editForm            = $this->createForm( 'App\Form\FactuurType', $factuur );
-			$previousCollections = array(
-				'regels' => $factuur->getRegels(),
-			);
-			$editForm->handleRequest( $request );
+			$form = $this->createForm( FactuurType::class, $factuur );
 
-			if ( $editForm->isSubmitted() && $editForm->isValid() ) {
+			$form->handleRequest( $request );
 
+			if ( $form->isSubmitted() && $form->isValid() ) {
 
+				dump( $factuur->getRegels() );
 				// put in collection of forms items
 				foreach ( $factuur->getRegels() as $regel ) {
-					$em->persist( $regel );
+					if ( $regel->getId() == null ) {
+						$reg = new Regel();
+						$reg->setProductId( $regel->getProductId() );
+						$reg->setAantal( $regel->getAantal() );
+						$reg->setFactuurId( $regel->getFactuurId() );
+
+						$em->persist( $reg );
+					}
 				}
+
+				$em->persist( $factuur );
 				$this->getDoctrine()->getManager()->flush();
 
-				return $this->redirectToRoute( 'factuur_index', array( 'id' => $factuur->getId() ) );
+				return $this->redirectToRoute( 'factuur_show', array( 'id' => $factuur->getId() ) );
 			}
 
 			return $this->render( 'factuur/edit.html.twig', array(
 				'factuur'  => $factuur,
 				'products' => $products,
-				'form'     => $editForm->createView(),
+				'form'     => $form->createView(),
 			) );
 		} else {
 			return $this->render( 'default/accessdenied.html.twig' );
@@ -157,25 +167,5 @@ class FactuurController extends AbstractController {
 		}
 
 		return $this->redirectToRoute( 'factuur_index' );
-	}
-
-	/**
-	 * @Route("/{factuur}/print", name="examen_print")
-	 */
-	public function print( Factuur $factuur ) {
-		$em = $this->getDoctrine()->getManager();
-
-		$factuur = $em->getRepository( Factuur::class )->find( $factuur->getId() );
-		$regels   = $em->getRepository( Regel::class )->findby( [ 'factuurId' => $factuur->getId() ] );
-		$products = $em->getRepository( Product::class )->findall();
-		$naw      = $em->getRepository( NAW::class )->findBy( array( 'user' => $factuur->getKlantId() ) );
-
-		return $this->render( 'factuur/print.html.twig',
-			[
-				'factuur' => $factuur,
-				'regels' => $regels,
-				'products'=>$products,
-				'naw'=>$naw,
-			] );
 	}
 }

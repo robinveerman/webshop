@@ -8,7 +8,6 @@ use App\Entity\Settings;
 use App\Form\ProductType;
 use App\Form\ReactiesType;
 use App\Repository\ProductRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +22,8 @@ class ProductController extends AbstractController {
 	 * @Route("/", name="product_index", methods="GET")
 	 */
 	public function index( ProductRepository $productRepository ): Response {
-		$em       = $this->getDoctrine()->getManager();
-		$settings = $em->getRepository( Settings::class )->findAll();
+		$em = $this->getDoctrine()->getManager();
+		$settings = $em->getRepository(Settings::class)->findAll();
 
 		return $this->render( 'product/index.html.twig',
 			[
@@ -42,26 +41,23 @@ class ProductController extends AbstractController {
 			$form    = $this->createForm( ProductType::class, $product );
 			$form->handleRequest( $request );
 
-			$image = $form->get( 'imagepath' )->getData();
-
 			if ( $form->isSubmitted() && $form->isValid() ) {
-				if ( empty( $image ) ) {
-					/** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-					$file = $form->get( 'imagepath' )->getData();
 
-					// Genereert unieke naam voor images
-					$fileName = md5( uniqid() ) . '.' . $file->guessExtension();
+				/** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+				$file = $form->get( 'imagepath' )->getData();
 
-					// Verplaatst file naar uploads-directory
-					$file->move(
-						$this->getParameter( 'uploads' ),
-						$fileName
-					);
+				// Genereert unieke naam voor images
+				$fileName = md5( uniqid() ) . '.' . $file->guessExtension();
 
-					// Zet het imagePath in de database. Hier staat $product maar je moet dat natuurlijk
-					// aanpassen zodat het klop met jouw database.
-					$product->setImagepath( $fileName );
-				}
+				// Verplaatst file naar uploads-directory
+				$file->move(
+					$this->getParameter( 'uploads' ),
+					$fileName
+				);
+
+				// Zet het imagePath in de database. Hier staat $product maar je moet dat natuurlijk
+				// aanpassen zodat het klop met jouw database.
+				$product->setImagepath( $fileName );
 
 				// Gooi alles in de DB
 				$em = $this->getDoctrine()->getManager();
@@ -83,53 +79,38 @@ class ProductController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/{id}", name="product_show", methods="POST|GET")
+	 * @Route("/{id}", name="product_show")
 	 */
-	public function show( Product $product = null, Request $request ): Response {
+	public function show( Product $product, Request $request ): Response {
 		$em = $this->getDoctrine()->getManager();
 
-		if ( $product == null ) {
-			return $this->render( 'default/error.html.twig',
-				[
-					'error'   => 'Dit product bestaat niet',
-					'message' => 'Het product dat u probeert te bekijken bestaat niet (meer)'
-				] );
-		}
+		$settings = $em->getRepository(Settings::class)->findAll();
+		$producten = $em->getRepository(Product::class)->findBy(['categorie'=>$product->getCategorie()]);
+		$reacties = $em->getRepository(Reacties::class)->findBy(['product'=> $product],['timestamp'=>'DESC']);
 
-		$settings  = $em->getRepository( Settings::class )->findAll();
-		$producten = $em->getRepository( Product::class )->findBy( [ 'categorie' => $product->getCategorie() ] );
-		$ratings   = $em->getRepository( Reacties::class )->createQueryBuilder( 'r' )
-		                ->where( 'r.rating != 0 and r.product = :product ' )
-		                ->setParameter( ':product', $product->getId() )
-		                ->getQuery()
-		                ->getResult();
-		$reacties  = $em->getRepository( Reacties::class )->findBy( [ 'product' => $product ], [ 'timestamp' => 'DESC' ] );
+		$reacty = new Reacties();
+		$form = $this->createForm(ReactiesType::class, $reacty);
+		$form->handleRequest($request);
 
-		// Reactie toevoegen
-		$reactie = new Reacties();
-		$form   = $this->createForm( ReactiesType::class, $reactie );
-		$form->handleRequest( $request );
-
-		if ( $form->isSubmitted() && $form->isValid() ) {
-			$reactie->setUser( $this->getUser() );
-			$reactie->setProduct( $product );
-			$reactie->setIpAdres( $request->getClientIp() );
-			$reactie->setTimestamp( new \DateTime( 'now' ) );
+		if ($form->isSubmitted() && $form->isValid()) {
+			$reacty->setUser($this->getUser());
+			$reacty->setProduct($product);
+			$reacty->setIpAdres($request->getClientIp());
+			$reacty->setTimestamp(new \DateTime('now'));
 
 			$em = $this->getDoctrine()->getManager();
-			$em->persist( $reactie );
+			$em->persist($reacty);
 			$em->flush();
 
-			return $this->redirectToRoute( 'product_show', [ 'id' => $product->getId() ] );
+			return $this->redirectToRoute('product_show', ['id'=>$product->getId()]);
 		}
 
 		return $this->render( 'product/show.html.twig', [
-			'product'  => $product,
-			'related'  => $producten,
-			'reacties' => $reacties,
-			'settings' => $settings,
-			'ratings'  => $ratings,
-			'form'     => $form->createView()
+			'product' => $product,
+			'related'=>$producten,
+			'reacties'=>$reacties,
+			'settings'=>$settings,
+			'form'=> $form->createView()
 		] );
 	}
 

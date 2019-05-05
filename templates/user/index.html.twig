@@ -39,14 +39,7 @@
                 </td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>
-                    {% if user.enabled == 1 %}
-                        <a class="btn btn-danger" href="{{ path('blokken_user', {'user': user.id}) }}">Blokkeer</a>
-                    {% else %}
-                        <a class="btn btn-success" href="{{ path('blokken_user', {'user': user.id}) }}">Activeer</a>
-                    {% endif %}
-                </td>
-                {#<td>{{ user.enabled ? '<i style="color:green" class="fas fa-check"></i>' : '<i style="color:red" class="fas fa-times"></i>' }}</td>#}
+                <td>{{ user.enabled ? '<i style="color:green" class="fas fa-check"></i>' : '<i style="color:red" class="fas fa-times"></i>' }}</td>
                 <td>{{ user.lastLogin ? user.lastLogin|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a class="btn btn-warning" href="{{ path('user_edit', {'id': user.id}) }}"><i

@@ -33,6 +33,8 @@ class CartController extends Controller {
 		// $cart = $session->set('cart', '');
 		$cart = $session->get( 'cart', array() );
 
+		// $cart = array_keys($cart);
+		// print_r($cart); die;
 
 		// fetch the information using query and ids in the cart
 		if ( $cart != '' ) {
@@ -67,6 +69,9 @@ class CartController extends Controller {
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		// $cart = $session->set('cart', '');
 		$cart = $session->get( 'cart', array() );
+
+		// $cart = array_keys($cart);
+		// print_r($cart); die;
 
 		// fetch the information using query and ids in the cart
 		if ( $cart != '' ) {
@@ -104,16 +109,10 @@ class CartController extends Controller {
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		$cart    = $session->get( 'cart', array() );
 
-		if ( $product->getVoorraad() == 0 ) {
-			return $this->render( 'default/error.html.twig', [
-				'error'   => 'Product uitverkocht',
-				'message' => 'Sorry, dit product is (tijdelijk) uitverkocht.'
-			] );
-		}
-
 		// check if the $id already exists in it.
 		if ( $product == null ) {
 			return $this->render( 'default/error.html.twig', [
+				'code'    => 104,
 				'error'   => 'Dit product bestaat niet',
 				'message' => 'Het product dat u probeert toe te voegen aan uw winkelwagen bestaat niet (meer) '
 			] );
@@ -121,9 +120,18 @@ class CartController extends Controller {
 			if ( isset( $cart[ $id ] ) ) {
 
 				++ $cart[ $id ];
+				/*  $qtyAvailable = $product->getQuantity();
 
+				  if ($qtyAvailable >= $cart[$id]['quantity'] + 1) {
+					  $cart[$id]['quantity'] = $cart[$id]['quantity'] + 1;
+				  } else {
+					  $this->get('session')->setFlash('notice', 'Quantity     exceeds the available stock');
+					  return $this->redirect($this->generateUrl('cart'));
+				  } */
 			} else {
+				// if it doesnt make it 1
 				$cart[ $id ] = 1;
+				//$cart[$id]['quantity'] = 1;
 			}
 
 			$session->set( 'cart', $cart );
@@ -139,25 +147,25 @@ class CartController extends Controller {
 	 * @throws \Exception
 	 */
 	public function checkoutAction() {
-
+		// verwerken van regels in de nieuwe factuur voor de huidige klant.
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		// $cart = $session->set('cart', '');
 		$cart = $session->get( 'cart', array() );
 
-
 		if ( $this->getUser() == null ) {
 			return $this->render( 'default/error.html.twig', [
+				'code'    => 105,
 				'error'   => 'Niet ingelogd',
 				'message' => 'Log in om af te rekenen'
 			] );
 		}
 
 		if ( $cart != null ) {
-
 			// aanmaken factuur regel.
 			$em         = $this->getDoctrine()->getManager();
 			$userAdress = $em->getRepository( User::class )->findOneBy( array( 'id' => $this->getUser()->getId() ) );
 
+			// new UserAdress if no UserAdress found...
 			if ( ! $userAdress ) {
 				$userAdress = new User();
 				$userAdress->setId( $this->getUser()->getId() );
@@ -166,9 +174,10 @@ class CartController extends Controller {
 			$factuur = new Factuur();
 			$factuur->setDatum( new \DateTime( "now" ) );
 			$factuur->setKlantId( $this->getUser() );
-			$factuur->setStatus( 'wachtend op betaling' );
 
-			// Regels in DB
+			//var_dump($cart);
+			// vullen regels met orderregels.
+			// put invoice in dbase.
 			if ( isset( $cart ) ) {
 				// $data = $this->get('request_stack')->getCurrentRequest()->request->all();
 				$em->persist( $factuur );
@@ -190,49 +199,10 @@ class CartController extends Controller {
 				}
 			}
 
-			// email ophalen
-			$email = $em->getRepository(Settings::class)->findBy(['id'=>2]);
 
-			// Factuur mailen
-			$regel   = $em->getRepository( Regel::class )->findBy( [ 'factuurId' => $factuur->getId() ] );
-			$product = $em->getRepository( Product::class )->findAll();
-
-			$message = $this->render( 'email/bestelling.html.twig', array(
-				'factuur'  => $factuur,
-				'products' => $product,
-				'regels'   => $regel,
-				'klant'    => $factuur->getKlantId()
-			) );
-
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-			$subject = "Bestelling";
-
-			$headers .= 'From: ' . $email[0]->getEmail() .' '. "\r\n";
-			mail( $email[0]->getEmail(), $subject, $message, $headers );
-
-
-			// voorraad aanpassen
-			foreach ( $cart as $product => $quantity ) {
-				$em       = $this->getDoctrine()->getManager();
-				$products = $em->getRepository( Product::class )->find( $product );
-
-				$oud   = $products->getVoorraad();
-				$nieuw = $oud - $quantity;
-
-				$products->setVoorraad( $nieuw );
-
-				$em->persist( $products );
-				$em->flush();
-
-			}
-
-			//Cart leeg
 			$session->clear();
 
 			return $this->redirectToRoute( 'factuur_show', [ 'id' => $factuur->getId() ] );
-
 		} else {
 			return $this->render( 'default/error.html.twig', [
 				'code'    => 103,

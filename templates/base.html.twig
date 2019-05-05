@@ -1,29 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {#<script>#}
-    {#function loadTheme() {#}
-    {#var xhttp = new XMLHttpRequest();#}
-    {#xhttp.onreadystatechange = function () {#}
-    {#if (this.readyState == 4 && this.status == 200) {#}
-    {#document.getElementById('theme').href = 'https://stackpath.bootstrapcdn.com/bootstrap/' + this.responseText + '/css/bootstrap.min.css';#}
-
-    {#}#}
-    {#};#}
-    {#xhttp.open("GET", "/theme", true);#}
-    {#xhttp.send();#}
-    {#}#}
-    {#loadTheme();#}
-    {#</script>#}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block metaDescripton %}{% endblock %}">
     <link rel="stylesheet" href="{{ asset('style/responsive.css') }}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     {# Bootstrap #}
-    {#<link rel="stylesheet" id="theme">#}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
     {# Font Awsome #}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -38,17 +23,25 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
     <script>
-        function search() {
-            str = document.getElementById('search').value;
-            window.location.href = '/zoeken/' + str;
+        function showNav() {
+            document.getElementById("click").onclick = "hideNav()";
+            document.getElementById("side-nav").style = "display: block";
+
+
+        }
+
+        function hideNav() {
+            document.getElementById("click").onclick = "showNav()";
+            document.getElementById("side-nav").style = "display: none";
+
         }
     </script>
 </head>
 <body>
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal bars-menu" id="click" onclick="showNav()"><i class="fas fa-bars"></i>
+    </h5>
     <h5 class="my-0 mr-md-auto font-weight-normal website-title"><a href="{{ path('default') }}">Webshop</a></h5>
-    <input class="form-control search" id="search" type="text" placeholder="Zoeken...">
-    <input class="btn btn-primary search-btn" type="submit" onclick="search()" value="Zoek">
     <nav class="my-2 my-md-0 mr-md-3">
 
         <a class="p-2 text-dark" href="{{ path('product_index') }}">Producten</a>
@@ -63,7 +56,6 @@
                     class="fas fa-shopping-cart"></i> {{ app.session.get('cart')|length }}</a>
     </nav>
     <div class="btn-menu">
-
         {% if is_granted("ROLE_SUPER_ADMIN") %}
             <a class="btn btn-info"
                href="{{ path('dashboard') }}">Admin</a>
@@ -79,22 +71,38 @@
 
     </div>
 </div>
+{#<div id="side-nav">#}
+{#{% if app.user %}#}
+{#{% if not is_granted("ROLE_SUPER_ADMIN") %}#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('product_index') }}">Producten</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('n_a_w_index') }}">Mijn Adresgegevens</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Mijn bestellingen</a>#}
+{#<br>#}
+{#<br>#}
+{#{% endif %}#}
+{#{% if is_granted("ROLE_SUPER_ADMIN") %}#}
+{#<a class="p-2 text-dark" href="{{ path('factuur_index') }}">Bestellingen</a>#}
+{#<br>#}
+{#<br>#}
+{#<a class="p-2 text-dark" href="{{ path('user_index') }}">Gebruikers</a>#}
+{#<br>#}
+{#<br>#}
+{#{% endif %}#}
+{#{% endif %}#}
+{#<a class="p-2 text-dark" href="{{ path('cart') }}"><i class="fas fa-shopping-cart"></i> Winkelwagen</a>#}
+{#</div>#}
 <div class="container">
-    {% if app.request.hasPreviousSession %}
-        {% for type, messages in app.session.flashbag.all() %}
-            {% for message in messages %}
-                <div class="flash-{{ type }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
-
-    {% block fos_user_content %}
-    {% endblock fos_user_content %}
     {% block body %}{% endblock %}
 </div>
+
 </body>
+
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->

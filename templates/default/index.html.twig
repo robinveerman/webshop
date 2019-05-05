@@ -11,26 +11,11 @@
                  width="75">
             <hr>
             <div class="card-body">
-                <a href="{{ path('merk_show', {'merk': producten.merk.naam }) }}">{{ producten.merk }}</a>
                 <h3 class="card-title">{{ producten.naam }}</h3>
-                {% if producten.actieprijs != 0 %}
-                    <del><h4 class="card-text mr-1 actie-prijs" style="color: red; float: left;">
-                            &euro;{{ producten.prijs|number_format(2) }}</h4></del>
-                    <h4 class="card-text" style="color: dodgerblue; float: left;">
-                        &euro;{{ producten.actieprijs|number_format(2) }}</h4>
-                {% else %}
-                    <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
-                {% endif %}
-                {% if producten.voorraad != 0 %}
-                    <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success">In Winkelwagen</a>
-                {% else %}
-                    <button disabled="disabled" class="btn btn-danger">Uitverkocht</button>
-                {% endif %}
+                <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
+                <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success">In Winkelwagen</a>
                 <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
             </div>
         </div>
     {% endfor %}
-    <br>
-    <br>
-    <br>
 {% endblock %}

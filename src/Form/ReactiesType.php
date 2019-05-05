@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Reacties;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,7 +14,9 @@ class ReactiesType extends AbstractType
     {
         $builder
             ->add('text', TextareaType::class, ['label'=>'Schrijf een review'])
-	        ->add('rating', IntegerType::class, ['label'=>'Rating (1-10)'])
+//            ->add('ipAdres')
+//            ->add('user')
+//            ->add('product')
         ;
     }
 

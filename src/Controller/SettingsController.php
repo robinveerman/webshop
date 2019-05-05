@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SettingsController extends AbstractController
 {
     /**
-     * @Route("/", name="st_show", methods="GET")
+     * @Route("/", name="settings_index", methods="GET")
      */
     public function index(SettingsRepository $settingsRepository): Response
     {
@@ -55,7 +55,7 @@ class SettingsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/bewerken", name="settings_index", methods="GET|POST")
+     * @Route("/{id}/edit", name="settings_edit", methods="GET|POST")
      */
     public function edit(Request $request, Settings $setting): Response
     {
@@ -65,7 +65,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('settings_index', ['id' => 2]);
+            return $this->redirectToRoute('settings_index', ['id' => $setting->getId()]);
         }
 
         return $this->render('settings/edit.html.twig', [

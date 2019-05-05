@@ -4,20 +4,12 @@
     {% set base  = 'base.html.twig' %}
 {% endif %}
 {% extends base %}
-{% block title %}Factuur{% endblock %}
 {% block body %}
     {% if is_granted("ROLE_SUPER_ADMIN") %}
         <h1>Factuur {{ factuur.id }}</h1>
-    {% else %}
-        <h1>Uw Factuur</h1>
     {% endif %}
     <hr>
     <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
-    <h4><b>status:</b> <span class="{{ factuur.status }}">{{ factuur.status }}</span></h4>
-    <hr>
-    <h4><b>klant:</b> {{ naw[0].voornaam }} {{ naw[0].achternaam }}</h4>
-    <h4><b>adres:</b> {{ naw[0].adres }} </h4>
-    <h4><b>woonplaats:</b> {{ naw[0].woonplaats }} </h4>
     <hr>
     <table class="table table-striped pull-right">
         <thead>
@@ -35,18 +27,12 @@
                 <td>{{ regel.aantal }}</td>
                 {% set totaal = regel.aantal %}
                 <td>{{ regel.productId.naam|default('Product bestaat niet meer') }}</td>
-                <td>
+                <td>&euro;
                     {% for product in products %}
                         {% set p = regel.productId %}
                         {% if p.id|default("") == product.id|default("") %}
-                            {% if product.actieprijs != 0 %}
-                                <span class="actie-prijs">&euro; {{ product.prijs|number_format(2) }}</span><br>
-                                &euro; {{ product.actieprijs|number_format(2) }}
-                                {% set totaal = (totaal * product.actieprijs) %}
-                            {% else %}
-                                &euro; {{ product.prijs|number_format(2) }}
-                                {% set totaal = (totaal * product.prijs) %}
-                            {% endif %}
+                            {{ product.prijs|number_format(2) }}
+                            {% set totaal = (totaal * product.prijs) %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -62,21 +48,9 @@
     <a style="float: left;" href="{{ path('factuur_index') }}">
         <button type="button" class="btn btn-primary">Terug</button>
     </a>
-    <button onclick="print()" class="btn btn-info ml-1">Print factuur</button>
     {% if is_granted('ROLE_ADMIN') %}
         <a style="float: left;" href="{{ path('factuur_edit', { 'id': factuur.id }) }}">
             <button type="button" class="btn btn-warning">Bewerk</button>
         </a>
     {% endif %}
-{% endblock %}
-{% block javascripts %}
-    <script>
-        function print() {
-
-            $("<iframe>")                             // create a new iframe element
-                .hide()                               // make it invisible
-                .attr("src", "" + {{ factuur.id }} +'/print') // point the iframe to the page you want to print
-                .appendTo("body");                    // add iframe to the DOM to cause it to load the page
-        }
-    </script>
 {% endblock %}

@@ -39,17 +39,9 @@
                                                  alt="{{ row.naam }}" width="75">
                                         </td>
                                         <td>{{ row.naam }}</td>
-                                        {% if row.actieprijs != 0 %}
-                                            <td><span class="actie-prijs">€{{ row.prijs | number_format(2) }}</span><br>
-                                                €{{ row.actieprijs | number_format(2) }}</td>
-                                            <td>€{{ (row.actieprijs * item) | number_format(2) }}</td>
-                                            {% set total = total + (row.actieprijs * item) %}
-                                        {% else %}
-                                            <td>€{{ row.prijs | number_format(2) }}</td>
-                                            <td>€{{ (row.prijs * item) | number_format(2) }}</td>
-                                            {% set total = total + (row.prijs * item) %}
-                                        {% endif %}
-
+                                        <td>€{{ row.prijs | number_format(2) }}</td>
+                                        <td>€{{ (row.prijs * item) | number_format(2) }}</td>
+                                        {% set total = total + (row.prijs * item) %}
                                     {% endif %}
                                 {% endfor %}
 
@@ -86,10 +78,10 @@
                 <button type="button" class="btn btn-success col-lg-2 pull-right">Afrekenen</button>
             </a>
             {% if settings[0].ClearCart == 1 %}
-                <a href="{{ path('cart_clear') }}">
-                    <button type="button" class="btn btn-danger col-lg-2 pull-right">Leeg maken</button>
-                </a>
-            {% endif %}
+            <a href="{{ path('cart_clear') }}">
+                <button type="button" class="btn btn-danger col-lg-2 pull-right">Leeg maken</button>
+            </a>
+                {% endif %}
             <br>
             <br>
             <br>
