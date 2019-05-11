@@ -1,32 +1,27 @@
-{% extends 'base.html.twig' %}
+{% extends 'base2.html.twig' %}
 
 {% block title %}Categorie{% endblock %}
 
 {% block body %}
-    <h1>Categorie {{ categorie }}</h1>
-    <hr>
-    {% for producten in producten %}
-        <div class="card" style="width: 18rem;">
-            <img src="/uploads/{{ producten.imagepath[0].imagepath }}" class="card-img-top" alt="{{ producten.naam }}"
-                 width="75">
-            <hr>
-            <div class="card-body">
-                <h3 class="card-title">{{ producten.naam }}</h3>
-                {% if producten.actieprijs != 0 %}
-                    <del><h4 class="card-text mr-1 actie-prijs" style="color: red; float: left;">
-                            &euro;{{ producten.prijs|number_format(2) }}</h4></del>
-                    <h4 class="card-text" style="color: dodgerblue; float: left;">
-                        &euro;{{ producten.actieprijs|number_format(2) }}</h4>
-                {% else %}
-                    <h4 class="card-text" style="color: dodgerblue">&euro;{{ producten.prijs|number_format(2) }}</h4>
-                {% endif %}
-                {% if producten.voorraad != 0 %}
-                    <a href="{{ path('cart_add', { 'id': producten.id }) }}" class="btn btn-success">In Winkelwagen</a>
-                {% else %}
-                    <button disabled="disabled" class="btn btn-danger">Uitverkocht</button>
-                {% endif %}
-                <a href="{{ path('product_show', { 'id': producten.id }) }}" class="btn btn-primary">Bekijk</a>
-            </div>
-        </div>
-    {% endfor %}
+    <h1>Categorie</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ categorie.id }}</td>
+            </tr>
+            <tr>
+                <th>Naam</th>
+                <td>{{ categorie.naam }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('categorie_index') }}" class="btn btn-primary">Terug</a>
+<br>
+    <a class="btn btn-warning" href="{{ path('categorie_edit', {'id': categorie.id}) }}">Bewerken</a>
+<br>
+<br>
+    {{ include('categorie/_delete_form.html.twig') }}
 {% endblock %}

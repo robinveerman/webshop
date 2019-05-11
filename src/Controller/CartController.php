@@ -212,28 +212,6 @@ class CartController extends Controller {
 				}
 			}
 
-			// email ophalen
-			$email = $em->getRepository( Settings::class )->findBy( [ 'id' => 2 ] );
-
-			// Factuur mailen
-			$regel   = $em->getRepository( Regel::class )->findBy( [ 'factuurId' => $factuur->getId() ] );
-			$product = $em->getRepository( Product::class )->findAll();
-
-			$message = $this->render( 'email/bestelling.html.twig', array(
-				'factuur'  => $factuur,
-				'products' => $product,
-				'regels'   => $regel,
-				'klant'    => $factuur->getKlantId()
-			) );
-
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-			$subject = "Bestelling";
-
-			$headers .= 'From: ' . $email[0]->getEmail() . ' ' . "\r\n";
-//			mail( $email[0]->getEmail(), $subject, $message, $headers );
-
 			// voorraad aanpassen
 			foreach ( $cart as $product => $quantity ) {
 				$em       = $this->getDoctrine()->getManager();

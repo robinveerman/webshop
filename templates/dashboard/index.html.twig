@@ -18,20 +18,14 @@
 
         <h1>Dashboard</h1>
         <hr>
-        <a  href="{{ path('omzet_totaal') }}"><i class="fas fa-chevron-right"></i> Volledige omzet zien</a>
-        <br>
+
         {# Totale omzet #}
         <div class="jumbotron small">
             <h2>Totale omzet</h2>
             <hr>
             {% set totaal = 0 %}
             {% for row in regel %}
-                {% if row.productId.actieprijs is not defined %}
-                    {% dump(row.productId) %}
-                    {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
-                {% else %}
-                    {% set totaal = totaal + row.productId.prijs * row.aantal %}
-                {% endif %}
+                {% set totaal = totaal + row.productId.prijs * row.aantal %}
             {% endfor %}
             <h3>
                 <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
@@ -43,12 +37,8 @@
             <h2>Omzet {{ 'now'|date('M') }} </h2>
             <hr>
             {% set totaal = 0 %}
-            {% for row in regel if row.factuurId.datum|date('M') == 'now'|date('M') %}
-                {% if row.productId.actieprijs > 0 %}
-                    {% set totaal = totaal + row.productId.actieprijs * row.aantal %}
-                {% else %}
-                    {% set totaal = totaal + row.productId.prijs * row.aantal %}
-                {% endif %}
+            {% for row in regel if row.factuurId.datum|date('m') == 'now'|date('m') %}
+                {% set totaal = totaal + row.productId.prijs * row.aantal %}
             {% endfor %}
             <h3>
                 <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
@@ -57,18 +47,16 @@
 
         {# Omzet vorige maand #}
         <div class="jumbotron small">
-            <h2>Omzet {{ 'now'|date('M')|date_modify('-1 month')|date('M') }} </h2>
+            <h2>Omzet {{ 'now'|date_modify('-1 month')|date('M') }} </h2>
             <hr>
             {% set totaal = 0 %}
-            {% for row in regel if row.factuurId.datum|date('M') == 'now'|date_modify('-1 month')|date('M') %}
+            {% for row in regel if row.factuurId.datum|date('M') == 'now'|date('M')|date_modify('-1 month') %}
                 {% set totaal = totaal + row.productId.prijs * row.aantal %}
             {% endfor %}
             <h3>
                 <div class="badge badge-success">&euro; {{ totaal|number_format(2, ',','.') }}</div>
             </h3>
         </div>
-
-
         {# Aantal verkochten producten #}
         <h2>Product statistieken</h2>
         <hr>

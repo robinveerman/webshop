@@ -18,7 +18,7 @@ class DashboardController extends AbstractController {
 
 			$producten = $em->getRepository( Product::class )->findAll();
 			$klanten   = $em->getRepository( User::class )->findAll();
-			$regel     = $em->getRepository( Regel::class )->findAll();
+			$regel  = $em->getRepository( Regel::class )->findAll();
 
 			$repository = $em->getRepository( Regel::class );
 			$query      = $repository->createQueryBuilder( 't' )
@@ -41,37 +41,10 @@ class DashboardController extends AbstractController {
 				'regels'    => $query,
 				'klanten'   => $klanten,
 				'punten'    => $punten,
-				'regel'     => $regel,
+				'regel'    => $regel,
 			) );
 		} else {
 			return $this->render( 'default/accessdenied.html.twig' );
 		}
-	}
-
-	/**
-	 * @Route("/omzet", name="omzet_totaal")
-	 */
-	public function omzet() {
-		$em = $this->getDoctrine()->getManager();
-
-		$RAW_QUERY = 'select distinct MONTH(datum), YEAR(datum) from factuur;';
-
-
-		$statement = $em->getConnection()->prepare( $RAW_QUERY );
-		$statement->execute();
-
-		$distdate = $statement->fetchAll();
-
-		$datums = [];
-		foreach ( $distdate as $key => $value ) {
-			array_push( $datums, $value['MONTH(datum)'] );
-		}
-
-		$regels = $em->getRepository(Regel::class)->findAll();
-		return $this->render( 'dashboard/omzet.html.twig', [
-			'dates' => $distdate,
-			'data'  => $datums,
-			'regel'  => $regels,
-		] );
 	}
 }

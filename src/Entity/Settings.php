@@ -26,16 +26,6 @@ class Settings
 	 */
 	private $ClearCart = 0;
 
-	/**
-	 * @ORM\Column(type="string")
-	 */
-	private $themes;
-
-	/**
-	 * @ORM\Column(type="string")
-	 */
-	private $email;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -61,30 +51,6 @@ class Settings
     public function setClearCart(bool $ClearCart): self
     {
         $this->ClearCart = $ClearCart;
-
-        return $this;
-    }
-
-    public function getThemes(): ?string
-    {
-        return $this->themes;
-    }
-
-    public function setThemes(string $themes): self
-    {
-        $this->themes = $themes;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }

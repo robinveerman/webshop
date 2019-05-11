@@ -5,7 +5,7 @@
 {% endif %}
 {% extends base %}
 
-{% block title %}Factuur{% endblock %}
+{% block title %}Factuur index{% endblock %}
 
 {% block body %}
     <h1>Factuur</h1>
@@ -18,7 +18,6 @@
         <thead>
         <tr>
             <th>Klant</th>
-            <th>Status</th>
             <th>Datum</th>
             <th>actions</th>
         </tr>
@@ -30,8 +29,8 @@
                     {% for row in naw if row.user.id == factuur.klantId.id %}
                         ({{ row.voornaam }} {{ row.achternaam }})
                     {% endfor %}</td>
-                <td><span class="{{ factuur.status }}">{{ factuur.status }}</span></td>
                 <td>{{ factuur.datum ? factuur.datum|date('Y-m-d') : '' }}</td>
+
                 <td>
                     <a class="btn btn-primary" href="{{ path('factuur_show', {'id': factuur.id}) }}">Bekijk</a>
                     {% if is_granted("ROLE_SUPER_ADMIN") %}

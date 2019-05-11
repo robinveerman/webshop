@@ -79,7 +79,9 @@
     </div>
 </div>
 <div class="brand-nav">
-    {{ render(controller('App\\Controller\\DefaultController::navigation')) }}
+    {{ render(controller(
+        'App\\Controller\\DefaultController::navigation'
+    )) }}
 </div>
 <br>
 <div class="container">

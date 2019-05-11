@@ -23,7 +23,7 @@ class Regel
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Product")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $productId;
 
