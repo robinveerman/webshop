@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit Merk{% endblock %}
+
+{% block body %}
+<h1>Merk bewerken</h1>
+<hr>
+{{ include('merk/_form.html.twig', {'button_label': 'Update'}) }}
+
+<a class="btn btn-primary" href="{{ path('merk_index') }}">Terug</a>
+
+{{ include('merk/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,4 +1,25 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success">{{ button_label|default('Opslaan') }}</button>
+<div class="width-50">
+    <h2>Info</h2>
+    <hr>
+    {{ form_row(form.code) }}
+    {{ form_row(form.naam) }}
+    {{ form_row(form.omschrijving) }}
+    <h2>Prijs</h2>
+    <hr>
+    {{ form_row(form.prijs) }}
+    {{ form_row(form.actieprijs) }}
+
+</div>
+<div class="width-50">
+    <h2>Overig</h2>
+    <hr>
+    {{ form_row(form.categorie) }}
+    {{ form_row(form.maat) }}
+    {{ form_row(form.merk) }}
+    {{ form_row(form.relatedProducts) }}
+    {{ form_row(form.voorraad) }}
+    {{ form_row(form.imagepath) }}
+</div>
+<button class="btn btn-success ">{{ button_label|default('Opslaan') }}</button>
 {{ form_end(form) }}

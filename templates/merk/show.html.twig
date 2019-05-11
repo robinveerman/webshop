@@ -1,9 +1,24 @@
-{% extends 'base.html.twig' %}
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
 
-{% block title %}Welkom{% endblock %}
+{% block title %}Merk {{ merk }}{% endblock %}
 
 {% block body %}
-    <h1>Welkom</h1>
+    <h1>{{ merk }}</h1>
+    <hr>
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <a href="{{ path('merk_edit', {'id': merk.id}) }}" class="btn btn-warning">Bewerken</a>
+        {{ include('merk/_delete_form.html.twig') }}
+        <hr>
+    {% endif %}
+    <div class="merk-info">
+        <img src="/uploads/{{ merk.imagepath }}" alt="{{ merk.naam }}" class="merk-img" width="200">
+        <p>{{ merk.omschrijving }}</p>
+    </div>
     <hr>
     {% for producten in productens %}
         <div class="card" style="width: 18rem;">
@@ -11,9 +26,7 @@
                  width="75">
             <hr>
             <div class="card-body">
-                {% if producten.merk %}
-                    <a href="{{ path('merk_show', {'merk': producten.merk.naam }) }}">{{ producten.merk }}</a>
-                {% endif %}
+                <a href="{{ path('merk_show', {'merk': producten.merk.naam }) }}">{{ producten.merk }}</a>
                 <h3 class="card-title">{{ producten.naam }}</h3>
                 {% if producten.actieprijs != 0 %}
                     <del><h4 class="card-text mr-1 actie-prijs" style="color: red; float: left;">
@@ -32,7 +45,4 @@
             </div>
         </div>
     {% endfor %}
-    <br>
-    <br>
-    <br>
 {% endblock %}

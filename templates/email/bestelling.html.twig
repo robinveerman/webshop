@@ -1,0 +1,53 @@
+{% block body %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <h1>Factuur </h1>
+    <hr>
+    <h4><b>datum:</b> {{ factuur.datum|date('d-m-Y') }}</h4>
+    {% if klant.naw != null %}
+        <h4><b>klant:</b> {{ klant.naw.voornaam }} {{ klant.naw.achternaam }}</h4>
+        <hr>
+        <h4><b>Woonplaats:</b> {{ klant.naw.woonplaats }}</h4>
+        <h4><b>Adres:</b> {{ klant.naw.adres }}</h4>
+        <h4><b>Postcode:</b> {{ klant.naw.postcode }}</h4>
+    {% endif %}
+    <hr>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Aantal</th>
+            <th>product</th>
+            <th>prijs</th>
+            <th>totaal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set gentot = 0 %}
+        {% for regel in regels %}
+            <tr>
+                <td>{{ regel.aantal }}</td>
+                {% set totaal = regel.aantal %}
+                <td>{{ regel.productId.naam }}</td>
+                <td>
+                    {% for product in products %}
+                        {% set p = regel.productId %}
+                        {% if p.id == product.id %}
+                            {% if product.actieprijs %}
+                                {{ product.actieprijs|number_format(2,',','.') }}
+                                {% set totaal = (totaal * product.actieprijs) %}
+                            {% else %}
+                                {{ product.prijs|number_format(2,',','.') }}
+                                {% set totaal = (totaal * product.prijs) %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ totaal|number_format(2,',','.') }} </td>
+                {% set gentot = (gentot + totaal) %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h3 class="btn-block">Totaal:<br> &euro; {{ gentot|number_format(2,',','.') }}</h3>
+    <hr>
+{% endblock %}

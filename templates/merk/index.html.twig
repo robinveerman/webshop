@@ -1,0 +1,29 @@
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
+{% block title %}Onze merken{% endblock %}
+
+{% block body %}
+    <h1>Onze Merken</h1>
+    <hr>
+    {% for row in merks %}
+        <a href="{{ path('merk_show',{'merk': row.naam}) }}">
+            <div class="card" style="width: 18rem;">
+                <img src="/uploads/{{ row.imagepath }}" class="card-img-top" alt="{{ row.naam }}"
+                     width="75">
+                <hr>
+                <div class="card-body">
+                    <h3 style="text-align: center" class="card-title">{{ row.naam }}</h3>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+        <a href="{{ path('merk_new') }}" class="btn btn-success">Nieuw</a>
+    {% endif %}
+{% endblock %}

@@ -1,4 +1,10 @@
-{% extends 'base.html.twig' %}
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+    {% set base  = 'base2.html.twig' %}
+{% else %}
+    {% set base  = 'base.html.twig' %}
+{% endif %}
+{% extends base %}
+
 {% block metaDescripton %}{{ product.omschrijving }}{% endblock %}
 {% block title %}{{ product.naam }} | Webshop{% endblock %}
 {% block stylesheets %}

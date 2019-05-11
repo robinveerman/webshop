@@ -1,0 +1,11 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}New Merk{% endblock %}
+
+{% block body %}
+<h1>Merk toevoegen</h1>
+<hr>
+{{ include('merk/_form.html.twig') }}
+<br>
+<a href="{{ path('merk_index') }}" class="btn btn-priamry">Terug</a>
+{% endblock %}

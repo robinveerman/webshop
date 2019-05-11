@@ -10,6 +10,7 @@ use App\Entity\Settings;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Cart controller.
@@ -191,7 +192,7 @@ class CartController extends Controller {
 			}
 
 			// email ophalen
-			$email = $em->getRepository(Settings::class)->findBy(['id'=>2]);
+			$email = $em->getRepository( Settings::class )->findBy( [ 'id' => 2 ] );
 
 			// Factuur mailen
 			$regel   = $em->getRepository( Regel::class )->findBy( [ 'factuurId' => $factuur->getId() ] );
@@ -209,9 +210,8 @@ class CartController extends Controller {
 
 			$subject = "Bestelling";
 
-			$headers .= 'From: ' . $email[0]->getEmail() .' '. "\r\n";
-			mail( $email[0]->getEmail(), $subject, $message, $headers );
-
+			$headers .= 'From: ' . $email[0]->getEmail() . ' ' . "\r\n";
+//			mail( $email[0]->getEmail(), $subject, $message, $headers );
 
 			// voorraad aanpassen
 			foreach ( $cart as $product => $quantity ) {
