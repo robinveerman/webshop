@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Controleer uw adresgegevens</h1>
+    <hr>
+    <div class="checkout-proces">
+        <div class="active"><p class="badge badge-light">1</p> Winkelwagen</div>
+        <div class="active"><p class="badge badge-light">2</p> Adresgegevens</div>
+        <div><p class="badge badge-light">3</p> Afrekenen</div>
+    </div>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Voornaam</th>
+            <td>{{ naw.Voornaam }}</td>
+        </tr>
+        <tr>
+            <th>Achternaam</th>
+            <td>{{ naw.Achternaam }}</td>
+        </tr>
+        <tr>
+            <th>Adres</th>
+            <td>{{ naw.Adres }}</td>
+        </tr>
+        <tr>
+            <th>Postcode</th>
+            <td>{{ naw.Postcode }}</td>
+        </tr>
+        <tr>
+            <th>Woonplaats</th>
+            <td>{{ naw.Woonplaats }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-warning" href="{{ path('n_a_w_edit', {'id': naw.id, 'history': 2}) }}">Bewerken</a>
+    <br>
+    <hr>
+    <a class="btn btn-success" href="{{ path('checkout') }}">Afrekenen</a>
+    <hr>
+    <a href="{{ path('cart') }}" class="btn btn-primary"><i class="fas fa-chevron-left"></i> Terug</a>
+
+{% endblock %}

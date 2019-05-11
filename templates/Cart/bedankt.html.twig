@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Bedankt voor je bestelling!</h1>
+    <hr>
+    <div class="checkout-proces">
+        <div class="active"><p class="badge badge-light">1</p> Winkelwagen</div>
+        <div class="active"><p class="badge badge-light">2</p> Adresgegevens</div>
+        <div class="active"><p class="badge badge-light">3</p> Afrekenen</div>
+    </div>
+    <hr>
+    <a class="btn btn-primary" href="{{ path('factuur_show', {'id': factuur.id}) }}">Bekijk factuur</a>
+{% endblock %}

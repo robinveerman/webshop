@@ -1,3 +1,8 @@
+*{
+    font-family: Heebo, sans-serif;
+}
+
+
 /* Product show*/
 .product-img {
     width: 90%;
@@ -244,5 +249,58 @@
     text-align: justify;
     width: 79%;
     float: right;
+}
 
+
+/* Navigatie */
+
+.brand-nav {
+    width: 100%;
+    background-color: #c5c5c5;
+    overflow: auto;
+    margin-top: -15px;
+}
+
+.brand-nav a {
+    float: left;
+    padding: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    width: 25%; /* Four links of equal widths */
+    text-align: center;
+}
+
+.brand-nav a:hover {
+    background-color: #ababab;
+}
+
+
+@media screen and (max-width: 500px) {
+    .brand-nav   a {
+        float: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Checkout */
+.checkout-proces{
+    height: 70px;
+}
+
+.checkout-proces div {
+    width: 250px;
+    height: 40px;
+    position: relative;
+    background: #575757;
+    float: left;
+    margin-left: 5px;
+    padding-top: 9px;
+    padding-left:25px;
+    color: white;
+}
+.active{
+    background-color: forestgreen !important;
 }

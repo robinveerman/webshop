@@ -69,9 +69,9 @@ class NAWController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/{id}/edit", name="n_a_w_edit", methods="GET|POST")
+	 * @Route("/{id}/edit/{history}", name="n_a_w_edit", methods="GET|POST", defaults={"history"=1})
 	 */
-	public function edit( Request $request, NAW $nAW ): Response {
+	public function edit( Request $request, NAW $nAW, $history ): Response {
 		if ( $nAW->getUser() === $this->getUser() || $this->isGranted( "ROLE_SUPER_ADMIN" ) ) {
 			$form = $this->createForm( NAWType::class, $nAW );
 			$form->handleRequest( $request );
@@ -79,7 +79,12 @@ class NAWController extends AbstractController {
 			if ( $form->isSubmitted() && $form->isValid() ) {
 				$this->getDoctrine()->getManager()->flush();
 
-				return $this->redirectToRoute( 'n_a_w_index', [ 'id' => $nAW->getId() ] );
+				if($history == 1) {
+					return $this->redirectToRoute( 'n_a_w_index', [ 'id' => $nAW->getId() ] );
+				}
+				elseif ($history == 2){
+					return $this->redirectToRoute( 'cart_check_gegevens', [ 'user' => $nAW->getUser()->getId() ] );
+				}
 			}
 
 			return $this->render( 'naw/edit.html.twig', [

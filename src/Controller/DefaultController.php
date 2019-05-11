@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Merk;
 use App\Entity\Product;
 use App\Entity\Settings;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,5 +34,12 @@ class DefaultController extends AbstractController {
 		return $this->render( 'default/theme.html.twig',
 			[ 'theme' => $theme[0]->getThemes() ]
 		);
+	}
+
+	public function navigation() {
+		$em     = $this->getDoctrine()->getManager();
+		$merken = $em->getRepository( Merk::class )->findAll();
+
+		return $this->render( 'default/navigation.html.twig', [ 'merken' => $merken ] );
 	}
 }

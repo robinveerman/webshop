@@ -1,5 +1,6 @@
 .container{
-    margin-left: 20% !important;
+    margin-top: -15px;
+    margin-left:250px !important;
 }
 body {
     font-size: .875rem;
@@ -22,7 +23,10 @@ body {
     left: 0;
     z-index: 100; /* Behind the navbar */
     padding: 48px 0 0; /* Height of navbar */
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    border-right: 1px solid lightgray;
+    width: 200px;
+    min-width: 200px;
+    font-size: 12pt;
 }
 
 .sidebar-sticky {
@@ -87,8 +91,6 @@ body {
     padding-top: .75rem;
     padding-bottom: .75rem;
     font-size: 1rem;
-    background-color: rgba(0, 0, 0, .25);
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }
 
 .navbar .form-control {
@@ -105,14 +107,8 @@ body {
 
 .form-control-dark:focus {
     border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-
-/* Styles */
-.width-50{
-    width: 45%;
-    margin-left: 2.5%;
-    float: left;
-    height: 600px;
+.nav-item:hover{
+    background-color: #e9e9e9;
 }

@@ -76,9 +76,12 @@
             <a class="btn btn-outline-primary" href="{{ path('fos_user_registration_register') }}">Registreren</a>&nbsp;
             <a class="btn btn-outline-success" href="{{ path('fos_user_security_login') }}">Login</a>
         {% endif %}
-
     </div>
 </div>
+<div class="brand-nav">
+    {{ render(controller('App\\Controller\\DefaultController::navigation')) }}
+</div>
+<br>
 <div class="container">
     {% if app.request.hasPreviousSession %}
         {% for type, messages in app.session.flashbag.all() %}

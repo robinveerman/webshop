@@ -1,0 +1,3 @@
+{% for merk in merken %}
+    <a href="{{ path('merk_show', {'merk': merk.naam}) }}">{{ merk.naam }}</a>
+{% endfor %}

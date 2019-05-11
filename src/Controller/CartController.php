@@ -101,7 +101,7 @@ class CartController extends Controller {
 		// fetch the cart
 		$em      = $this->getDoctrine()->getManager();
 		$product = $em->getRepository( Product::class )->find( $id );
-		//print_r($product->getId()); die;
+
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		$cart    = $session->get( 'cart', array() );
 
@@ -128,11 +128,32 @@ class CartController extends Controller {
 			}
 
 			$session->set( 'cart', $cart );
-			//echo('<pre>');
-			//print_r($cart); echo ('</pre>');die();
+
 			return $this->redirect( $this->generateUrl( 'cart' ) );
 
 		}
+	}
+
+
+	/**
+	 * @Route("/check/gegevens/{user}", name="cart_check_gegevens")
+	 */
+	public function check( User $user ) {
+
+		// Cart ophalen
+		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
+		$cart    = $session->get( 'cart', array() );
+
+		if(empty($cart)){
+			return $this->redirectToRoute('cart');
+		}
+
+		$em  = $this->getDoctrine()->getManager();
+		$naw = $em->getRepository( NAW::class )->findOneBy( [ 'user' => $user->getId() ] );
+
+		return $this->render( 'Cart/naw.html.twig', [
+			'naw' => $naw
+		] );
 	}
 
 	/**
@@ -231,7 +252,7 @@ class CartController extends Controller {
 			//Cart leeg
 			$session->clear();
 
-			return $this->redirectToRoute( 'factuur_show', [ 'id' => $factuur->getId() ] );
+			return $this->redirectToRoute( 'cart_bedankt', [ 'factuur' => $factuur->getId() ] );
 
 		} else {
 			return $this->render( 'default/error.html.twig', [
@@ -288,6 +309,15 @@ class CartController extends Controller {
 		//print_r($cart); echo ('</pre>');die();
 
 		return $this->redirect( $this->generateUrl( 'cart' ) );
+	}
+
+	/**
+	 * @Route("/bedankt/{factuur}", name="cart_bedankt")
+	 */
+	public function bedankt( Factuur $factuur ) {
+
+		return $this->render( 'Cart/bedankt.html.twig', [ 'factuur' => $factuur ] );
+
 	}
 
 	/**

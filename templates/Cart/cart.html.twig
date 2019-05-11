@@ -3,12 +3,12 @@
 {% block body %}
     <h1>Winkelwagen</h1>
     <hr>
+    <div class="checkout-proces">
+        <div class="active"><p class="badge badge-light">1</p> Winkelwagen</div>
+        <div><p class="badge badge-light">2</p> Adresgegevens</div>
+        <div><p class="badge badge-light">3</p> Afrekenen</div>
+    </div>
     <ul class="thumbnails">
-
-        {% if empty %}
-            <h5>Your shopping cart is empty.</h5>
-        {% endif %}
-
         {% set cart = app.session.get('cart') %}
         {% set total = 0 %}
         {% set count = 0 %}
@@ -82,7 +82,7 @@
                 <button type="button" class="btn btn-success col-lg-2 pull-right" disabled>Winkelwagen is leeg</button>
             </a>
         {% else %}
-            <a href="{{ path('checkout') }}">
+            <a href="{{ path('cart_check_gegevens',{'user': app.user.id}) }}">
                 <button type="button" class="btn btn-success col-lg-2 pull-right">Afrekenen</button>
             </a>
             {% if settings[0].ClearCart == 1 %}
