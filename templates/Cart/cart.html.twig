@@ -10,8 +10,10 @@
     </div>
     <ul class="thumbnails">
         {% set cart = app.session.get('cart') %}
+        {% set coupon = app.session.get('coupon') %}
         {% set total = 0 %}
         {% set count = 0 %}
+        {% set kortingP = 0 %}
 
         {% if product %}
             <div class="row">
@@ -52,6 +54,22 @@
                                 </td>
                             </tr>
                         {% endfor %}
+                        {# Kortings codes #}
+                        {% for c in coupon %}
+                            {% for row in c %}
+                                <tr bgcolor="#87cefa">
+                                    <td>1</td>
+                                    <td></td>
+                                    <td>{{ row.naam }}</td>
+                                    <td>-{{ row.percentage }}&percnt;</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                {% set kortingP = kortingP + total * row.percentage / 100 %}
+                                {% dump(kortingP) %}
+                                {% set total = total - kortingP %}
+                            {% endfor %}
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -59,7 +77,13 @@
         {% endif %}
     </ul>
     <hr>
+    <input id="kortingscode" class="form-control" style="width: 25%; float: left;" placeholder="Kortingscode">
+    <button class="btn btn-primary" onclick="add()">Voeg toe</button>
+    <hr>
     <h4 class="right">Totaal in winkelwagen = €{{ total | number_format(2) }}</h4>
+    {% if kortingP != 0 %}
+        <h4 class="right">Totaal korting = €{{ kortingP | number_format(2) }}</h4>
+    {% endif %}
     <hr>
     <a href="{{ path('default') }}">
         <button type="button" class="btn btn-primary">Verder winkelen</button>
@@ -78,15 +102,21 @@
                 <button type="button" class="btn btn-success col-lg-2 pull-right">Afrekenen</button>
             </a>
             {% if settings[0].ClearCart == 1 %}
-            <a href="{{ path('cart_clear') }}">
-                <button type="button" class="btn btn-danger col-lg-2 pull-right">Leeg maken</button>
-            </a>
-                {% endif %}
+                <a href="{{ path('cart_clear') }}">
+                    <button type="button" class="btn btn-danger col-lg-2 pull-right">Leeg maken</button>
+                </a>
+            {% endif %}
+
             <br>
             <br>
             <br>
         {% endif %}
 
+        {% if korting != null %}
+            <a href="{{ path('kortingscode_remove') }}">
+                <button type="button" class="btn btn-danger col-lg-2 pull-right">Coupon verwijderen</button>
+            </a>
+        {% endif %}
         {# Check of NAW-gegevens aanwezig zijn #}
         {% if naw == null %}
             <div class="alert alert-danger">
@@ -107,4 +137,13 @@
     {% endif %}
     <br>
     <br>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function add() {
+            let code = document.getElementById('kortingscode').value;
+            window.location.href = "/kortingscode/add/" + code;
+        }
+    </script>
+
 {% endblock %}

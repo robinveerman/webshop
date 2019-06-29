@@ -2,12 +2,11 @@
 {{ form_start(form) }}
     {{ form_row(form.datum) }}
     {{ form_row(form.klantId) }}
-
-
 <h3>Regels</h3>
 <hr>
-<table class="table table-striped table-bordered tags" data-prototype="{{ form_widget(form.regels.vars.prototype)|e('html_attr') }}">
-    {# iterate over each existing tag and render its only field: name #}
+<table class="table table-striped table-bordered tags"
+       data-prototype="{{ form_widget(form.regels.vars.prototype)|e('html_attr') }}">
+    {{ dump(form.regels) }}
     {% for regel in form.regels %}
         <tr>
             <td>{{ form_row(regel.aantal) }}</td>
@@ -16,6 +15,5 @@
         </tr>
     {% endfor %}
 </table>
-
 <button class="btn btn-success">{{ button_label|default('Opslaan') }}</button>
 {{ form_end(form) }}

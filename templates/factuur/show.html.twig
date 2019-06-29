@@ -30,6 +30,7 @@
         </thead>
         <tbody>
         {% set gentot = 0 %}
+        {% set korting = 0 %}
         {% for regel in regels %}
             <tr>
                 <td>{{ regel.aantal }}</td>
@@ -53,6 +54,16 @@
                 <td>&euro; {{ totaal|number_format(2) }}</td>
                 {% set gentot = (gentot + totaal) %}
             </tr>
+        {% endfor %}
+        {% for row in factuur.kortingscode %}
+            <tr bgcolor="#87cefa">
+                <td>1</td>
+                <td>{{ row.naam }}</td>
+                <td>-{{ row.percentage }}&percnt;</td>
+                <td></td>
+            </tr>
+            {% set korting = korting + gentot * row.percentage / 100 %}
+            {% set gentot = gentot - korting %}
         {% endfor %}
         </tbody>
     </table>

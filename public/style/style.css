@@ -2,6 +2,10 @@
     font-family: Heebo, sans-serif;
 }
 
+.hamburger{
+    display: none;
+}
+
 
 /* Product show*/
 .product-img {
@@ -301,6 +305,13 @@
     padding-left:25px;
     color: white;
 }
-.active{
+.checkout-proces .active{
     background-color: forestgreen !important;
+}
+
+.width-50{
+    width: 48%;
+    float: left;
+    margin-left: 1%;
+    height: 600px;
 }

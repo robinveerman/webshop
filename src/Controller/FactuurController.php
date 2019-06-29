@@ -168,4 +168,22 @@ class FactuurController extends AbstractController {
 
 		return $this->redirectToRoute( 'factuur_index' );
 	}
+
+	/**
+	 * @Route("/{factuur}/print", name="examen_print")
+	 */
+	public function print( Factuur $factuur ) {
+		$em = $this->getDoctrine()->getManager();
+		$factuur = $em->getRepository( Factuur::class )->find( $factuur->getId() );
+		$regels   = $em->getRepository( Regel::class )->findby( [ 'factuurId' => $factuur->getId() ] );
+		$products = $em->getRepository( Product::class )->findall();
+		$naw      = $em->getRepository( NAW::class )->findBy( array( 'user' => $factuur->getKlantId() ) );
+		return $this->render( 'factuur/print.html.twig',
+			[
+				'factuur' => $factuur,
+				'regels' => $regels,
+				'products'=>$products,
+				'naw'=>$naw,
+			] );
+	}
 }

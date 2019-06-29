@@ -7,21 +7,40 @@
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ categorie.id }}</td>
-            </tr>
-            <tr>
-                <th>Naam</th>
-                <td>{{ categorie.naam }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ categorie.id }}</td>
+        </tr>
+        <tr>
+            <th>Naam</th>
+            <td>{{ categorie.naam }}</td>
+        </tr>
         </tbody>
     </table>
 
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Afbeelding</th>
+            <th>Naam</th>
+            <th>Prijs</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in categorie.producten %}
+            {% dump(row) %}
+            <tr>
+                <td><img src="/uploads/{{ row.imagepath[0].imagepath }}" width="100"></td>
+                <td>{{ row.naam }}</td>
+                <td>{{ row.prijs|number_format(2, ',','.') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <a href="{{ path('categorie_index') }}" class="btn btn-primary">Terug</a>
-<br>
+    <br>
     <a class="btn btn-warning" href="{{ path('categorie_edit', {'id': categorie.id}) }}">Bewerken</a>
-<br>
-<br>
+    <br>
+    <br>
     {{ include('categorie/_delete_form.html.twig') }}
 {% endblock %}

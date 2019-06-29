@@ -1,0 +1,41 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Kortingscode{% endblock %}
+
+{% block body %}
+    <h1>Kortingscode</h1>
+    <hr>
+    <a href="{{ path('kortingscode_new') }}" class="btn btn-success">Nieuw</a>
+    <hr>
+    <table class="table table-striped" id="lijst">
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Percentage</th>
+                <th>Einddatum</th>
+                <th>Code</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for kortingscode in kortingscodes %}
+            <tr>
+                <td>{{ kortingscode.naam }}</td>
+                <td>{{ kortingscode.percentage }}&percnt;</td>
+                <td>{{ kortingscode.einddatum ? kortingscode.einddatum|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ kortingscode.code }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('kortingscode_show', {'id': kortingscode.id}) }}">Bekijk</a>
+                    <a class="btn btn-warning" href="{{ path('kortingscode_edit', {'id': kortingscode.id}) }}">Bewerk</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">geen gegevens gevonden</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <a href="{{ path('kortingscode_new') }}" class="btn btn-success">Nieuw</a>
+{% endblock %}

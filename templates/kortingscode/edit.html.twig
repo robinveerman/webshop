@@ -1,0 +1,13 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Edit Kortingscode{% endblock %}
+
+{% block body %}
+<h1>Kortingscode bewerken</h1>
+<hr>
+{{ include('kortingscode/_form.html.twig', {'button_label': 'Update'}) }}
+
+<a class="btn btn-primary" href="{{ path('kortingscode_index') }}">Terug</a>
+
+{{ include('kortingscode/_delete_form.html.twig') }}
+{% endblock %}

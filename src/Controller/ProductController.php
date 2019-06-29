@@ -77,40 +77,47 @@ class ProductController extends AbstractController {
 			return $this->render( 'default/accessdenied.html.twig' );
 		}
 	}
-
 	/**
-	 * @Route("/{id}", name="product_show")
+	 * @Route("/{id}", name="product_show", methods="POST|GET")
 	 */
-	public function show( Product $product, Request $request ): Response {
+	public function show( Product $product = null, Request $request ): Response {
 		$em = $this->getDoctrine()->getManager();
-
-		$settings = $em->getRepository(Settings::class)->findAll();
-		$producten = $em->getRepository(Product::class)->findBy(['categorie'=>$product->getCategorie()]);
-		$reacties = $em->getRepository(Reacties::class)->findBy(['product'=> $product],['timestamp'=>'DESC']);
-
-		$reacty = new Reacties();
-		$form = $this->createForm(ReactiesType::class, $reacty);
-		$form->handleRequest($request);
-
-		if ($form->isSubmitted() && $form->isValid()) {
-			$reacty->setUser($this->getUser());
-			$reacty->setProduct($product);
-			$reacty->setIpAdres($request->getClientIp());
-			$reacty->setTimestamp(new \DateTime('now'));
-
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($reacty);
-			$em->flush();
-
-			return $this->redirectToRoute('product_show', ['id'=>$product->getId()]);
+		if ( $product == null ) {
+			return $this->render( 'default/error.html.twig',
+				[
+					'error'   => 'Dit product bestaat niet',
+					'message' => 'Het product dat u probeert te bekijken bestaat niet (meer)'
+				] );
 		}
-
+		$settings  = $em->getRepository( Settings::class )->findAll();
+		$producten = $em->getRepository( Product::class )->findBy( [ 'categorie' => $product->getCategorie() ] );
+		$ratings   = $em->getRepository( Reacties::class )->createQueryBuilder( 'r' )
+		                ->where( 'r.rating != 0 and r.product = :product ' )
+		                ->setParameter( ':product', $product->getId() )
+		                ->getQuery()
+		                ->getResult();
+		$reacties  = $em->getRepository( Reacties::class )->findBy( [ 'product' => $product ], [ 'timestamp' => 'DESC' ] );
+		// Reactie toevoegen
+		$reactie = new Reacties();
+		$form   = $this->createForm( ReactiesType::class, $reactie );
+		$form->handleRequest( $request );
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$reactie->setUser( $this->getUser() );
+			$reactie->setProduct( $product );
+			$reactie->setIpAdres( $request->getClientIp() );
+			$reactie->setTimestamp( new \DateTime( 'now' ) );
+			$em = $this->getDoctrine()->getManager();
+			$em->persist( $reactie );
+			$em->flush();
+			return $this->redirectToRoute( 'product_show', [ 'id' => $product->getId() ] );
+		}
 		return $this->render( 'product/show.html.twig', [
-			'product' => $product,
-			'related'=>$producten,
-			'reacties'=>$reacties,
-			'settings'=>$settings,
-			'form'=> $form->createView()
+			'product'  => $product,
+			'related'  => $producten,
+			'reacties' => $reacties,
+			'settings' => $settings,
+			'ratings'  => $ratings,
+			'form'     => $form->createView()
 		] );
 	}
 

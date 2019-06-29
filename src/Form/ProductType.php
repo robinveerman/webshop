@@ -20,6 +20,9 @@ class ProductType extends AbstractType
             ->add('categorie')
             ->add('relatedProducts', null, ['attr'=>['class'=>'js-example-basic-multiple']])
             ->add('omschrijving')
+            ->add('actieprijs')
+            ->add('merk')
+            ->add('voorraad')
 	       ->add('imagepath', null, ['label'=>'Afbeeldingen', 'attr'=>['class'=>'js-example-basic-multiple']]);
     }
 

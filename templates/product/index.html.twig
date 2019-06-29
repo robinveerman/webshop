@@ -81,9 +81,6 @@
         {% endfor %}
         </tbody>
     </table>
-    <br>
-    <br>
-    <br>
     <div class="message" aria-live="polite" aria-atomic="true"
          style="position: fixed; min-height: 200px;">
         <div class="toast" style="position: absolute; top: 0; right: 0;">
@@ -115,15 +112,5 @@
             xhttp.open("GET", "../cart/add/" + id, true);
             xhttp.send();
         }
-    </script>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            var table = $('#lijst').DataTable({
-                stateSave: true
-            });
-            table.buttons().container()
-                .appendTo($('.col-sm-6:eq(0)', table.table().container()));
-            $('.dropdown-toggle').dropdown();
-        });
     </script>
 {% endblock %}

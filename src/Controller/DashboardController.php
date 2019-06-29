@@ -18,7 +18,7 @@ class DashboardController extends AbstractController {
 
 			$producten = $em->getRepository( Product::class )->findAll();
 			$klanten   = $em->getRepository( User::class )->findAll();
-			$regel  = $em->getRepository( Regel::class )->findAll();
+			$regel     = $em->getRepository( Regel::class )->findAll();
 
 			$repository = $em->getRepository( Regel::class );
 			$query      = $repository->createQueryBuilder( 't' )
@@ -28,20 +28,11 @@ class DashboardController extends AbstractController {
 			                         ->getQuery()
 			                         ->getResult();
 
-			$RAW_QUERY = 'select SUM((select prijs from product where product.id = product_id_id ) * aantal) As productId from regel Where product_id_id is not null GROUP BY product_id_id ;';
-
-			$statement = $em->getConnection()->prepare( $RAW_QUERY );
-			$statement->execute();
-
-			$punten = $statement->fetchAll();
-
-
 			return $this->render( 'dashboard/index.html.twig', array(
 				'producten' => $producten,
 				'regels'    => $query,
 				'klanten'   => $klanten,
-				'punten'    => $punten,
-				'regel'    => $regel,
+				'regel'     => $regel,
 			) );
 		} else {
 			return $this->render( 'default/accessdenied.html.twig' );

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Factuur;
+use App\Entity\Kortingscode;
 use App\Entity\NAW;
 use App\Entity\Product;
 use App\Entity\Regel;
@@ -26,6 +27,7 @@ class CartController extends Controller {
 		$em = $this->getDoctrine()->getManager();
 
 		$settings = $em->getRepository( Settings::class )->findAll();
+		$korting  = $em->getRepository( Kortingscode::class )->findAll();
 		$naw      = $em->getRepository( NAW::class )->findBy( array( 'user' => $this->getUser() ) );
 
 
@@ -52,6 +54,7 @@ class CartController extends Controller {
 			return $this->render( 'Cart/cart.html.twig', array(
 				'empty'    => false,
 				'product'  => $product,
+				'korting'  => $korting,
 				'naw'      => $naw,
 				'settings' => $settings,
 			) );
@@ -144,8 +147,8 @@ class CartController extends Controller {
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		$cart    = $session->get( 'cart', array() );
 
-		if(empty($cart)){
-			return $this->redirectToRoute('cart');
+		if ( empty( $cart ) ) {
+			return $this->redirectToRoute( 'cart' );
 		}
 
 		$em  = $this->getDoctrine()->getManager();
@@ -164,7 +167,8 @@ class CartController extends Controller {
 
 		$session = $this->get( 'request_stack' )->getCurrentRequest()->getSession();
 		// $cart = $session->set('cart', '');
-		$cart = $session->get( 'cart', array() );
+		$cart   = $session->get( 'cart', array() );
+		$coupon = $session->get( 'coupon', array() );
 
 
 		if ( $this->getUser() == null ) {
@@ -189,6 +193,13 @@ class CartController extends Controller {
 			$factuur->setDatum( new \DateTime( "now" ) );
 			$factuur->setKlantId( $this->getUser() );
 			$factuur->setStatus( 'wachtend op betaling' );
+
+			// Kortingscodes toevoegen
+			foreach ( $coupon as $c ) {
+				foreach ( $c as $korting ) {
+					$factuur->addKortingscode( $korting );
+				}
+			}
 
 			// Regels in DB
 			if ( isset( $cart ) ) {

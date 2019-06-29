@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +23,16 @@ class Categorie
      */
     private $naam;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="Product", mappedBy="categorie")
+	 */
+	private $producten;
+
+    public function __construct()
+    {
+        $this->producten = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,5 +51,36 @@ class Categorie
     }
     public function __toString() {
 	    return (string) $this->getNaam();
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducten(): Collection
+    {
+        return $this->producten;
+    }
+
+    public function addProducten(Product $producten): self
+    {
+        if (!$this->producten->contains($producten)) {
+            $this->producten[] = $producten;
+            $producten->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProducten(Product $producten): self
+    {
+        if ($this->producten->contains($producten)) {
+            $this->producten->removeElement($producten);
+            // set the owning side to null (unless already changed)
+            if ($producten->getCategorie() === $this) {
+                $producten->setCategorie(null);
+            }
+        }
+
+        return $this;
     }
 }
